@@ -1,28 +1,23 @@
-import { useState } from 'react'
 import { Plus } from 'lucide-react'
-import { Button, Input } from '@/components/ui'
+import { useState } from 'react'
+import { Button } from '@/components/ui'
 import AddFieldModal from '../AddFieldModal'
-import MultipleChoiceField from '../MultipleChoiceField'
+import { useActiveForm, useFormBuilderStore } from '@/store/formBuilderStore'
 import AddFieldZone from './AddFieldZone'
 import EmptyState from './EmptyState'
+import FieldItem from './FieldItem'
 import FormHeader from './FormHeader'
-
-const HEARING_OPTIONS = ['Social Media', 'Friend Recommendation', 'Search Engine'] as const
-
-const MOCK_FIELDS = ['multiple-choice', 'email'] as const
-
-function EmailField() {
-	return (
-		<div className="rounded-lg border border-border bg-surface p-5 shadow-card">
-			<p className="mb-3 text-[15px] font-medium text-text-primary">Email Address</p>
-			<Input type="email" placeholder="Enter your email" className="bg-surface-tertiary" />
-		</div>
-	)
-}
 
 export default function FormCanvas() {
 	const [modalOpen, setModalOpen] = useState(false)
-	const hasFields = MOCK_FIELDS.length > 0
+	const form = useActiveForm()
+	const { addField, selectedFieldId } = useFormBuilderStore()
+	const fields = form?.fields ?? []
+	const hasFields = fields.length > 0
+
+	function handleAddField(type: string) {
+		addField(type as Parameters<typeof addField>[0])
+	}
 
 	return (
 		<div className="mx-auto flex max-w-170 flex-col gap-4">
@@ -30,8 +25,13 @@ export default function FormCanvas() {
 
 			{hasFields ? (
 				<>
-					<MultipleChoiceField question="How did you hear about us?" options={[...HEARING_OPTIONS]} />
-					<EmailField />
+					{fields.map(field => (
+						<FieldItem
+							key={field.id}
+							field={field}
+							isSelected={selectedFieldId === field.id}
+						/>
+					))}
 					<AddFieldZone onClick={() => setModalOpen(true)} />
 					<Button
 						variant="outline"
@@ -46,7 +46,11 @@ export default function FormCanvas() {
 				<EmptyState onAdd={() => setModalOpen(true)} />
 			)}
 
-			<AddFieldModal open={modalOpen} onClose={() => setModalOpen(false)} />
+			<AddFieldModal
+				open={modalOpen}
+				onClose={() => setModalOpen(false)}
+				onSelect={handleAddField}
+			/>
 		</div>
 	)
 }
