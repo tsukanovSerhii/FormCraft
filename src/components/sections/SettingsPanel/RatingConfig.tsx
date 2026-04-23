@@ -1,10 +1,15 @@
-import { useState } from 'react'
 import { SectionLabel } from '@/components/ui'
+import { useFormBuilderStore } from '@/store/formBuilderStore'
 
 const MAX_OPTIONS = [3, 5, 7, 10]
 
-export default function RatingConfig() {
-	const [max, setMax] = useState(5)
+interface RatingConfigProps {
+	fieldId: string
+	ratingMax: number
+}
+
+export default function RatingConfig({ fieldId, ratingMax }: RatingConfigProps) {
+	const { updateField } = useFormBuilderStore()
 
 	return (
 		<div className="flex flex-col gap-2">
@@ -13,10 +18,10 @@ export default function RatingConfig() {
 				{MAX_OPTIONS.map(n => (
 					<button
 						key={n}
-						onClick={() => setMax(n)}
+						onClick={() => updateField(fieldId, { ratingMax: n })}
 						className={[
 							'flex h-8 flex-1 items-center justify-center rounded-md border text-[13px] font-medium transition-colors',
-							n === max
+							n === ratingMax
 								? 'border-brand bg-brand-muted text-brand'
 								: 'border-border text-text-secondary hover:border-brand-light',
 						].join(' ')}

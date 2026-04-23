@@ -15,7 +15,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Navigate to="/forms" replace />} />
         <Route path="/forms" element={<DashboardPage />} />
-        <Route path="/builder" element={<BuilderPage />} />
+        <Route path="/builder/:formId" element={<BuilderPage />} />
         <Route path="/responses" element={<ResponsesPage />} />
         <Route path="/analytics" element={<AnalyticsPage />} />
         <Route path="/templates" element={<TemplatesPage />} />

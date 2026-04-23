@@ -3,14 +3,17 @@ export type FieldType =
   | 'textarea'
   | 'number'
   | 'email'
+  | 'phone'
   | 'select'
   | 'checkbox'
   | 'radio'
   | 'date'
+  | 'file'
+  | 'rating'
 
 export interface FieldOption {
+  id: string
   label: string
-  value: string
 }
 
 export interface FormField {
@@ -20,6 +23,8 @@ export interface FormField {
   placeholder?: string
   required: boolean
   options?: FieldOption[]
+  ratingMax?: number
+  defaultValue?: string
 }
 
 export interface Form {
@@ -27,6 +32,8 @@ export interface Form {
   title: string
   description?: string
   fields: FormField[]
+  status: 'draft' | 'published'
+  responses: number
   createdAt: number
   updatedAt: number
 }

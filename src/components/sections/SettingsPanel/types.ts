@@ -1,15 +1,6 @@
-export type FieldType =
-	| 'text'
-	| 'textarea'
-	| 'number'
-	| 'email'
-	| 'phone'
-	| 'radio'
-	| 'checkbox'
-	| 'select'
-	| 'date'
-	| 'file'
-	| 'rating'
+import type { FieldType } from '@/types/form'
+
+export type { FieldType }
 
 export const FIELD_TYPE_LABELS: Record<FieldType, string> = {
 	text:     'Short Text',
