@@ -1,15 +1,24 @@
-import { Copy, Eye, GripVertical, Trash2, X } from 'lucide-react'
+import { Copy, Eye, Trash2 } from 'lucide-react'
 import { Badge, Button, Input, SectionLabel, Textarea, Toggle } from '@/components/ui'
+import FileConfig from './FileConfig'
+import OptionsEditor from './OptionsEditor'
+import RatingConfig from './RatingConfig'
+import { FIELD_TYPE_LABELS, OPTIONS_TYPES, PLACEHOLDER_TYPES, type FieldType } from './types'
 
-const options = ['Social Media', 'Friend Recommendation', 'Search Engine']
+interface SettingsPanelProps {
+	fieldType?: FieldType
+}
 
-export default function SettingsPanel() {
+export default function SettingsPanel({ fieldType = 'radio' }: SettingsPanelProps) {
+	const hasOptions = OPTIONS_TYPES.includes(fieldType)
+	const hasPlaceholder = PLACEHOLDER_TYPES.includes(fieldType)
+
 	return (
 		<div className="flex flex-col">
 			{/* Header */}
 			<div className="flex items-center justify-between border-b border-border px-4 py-3">
 				<SectionLabel>Settings</SectionLabel>
-				<Badge>Multiple Choice</Badge>
+				<Badge>{FIELD_TYPE_LABELS[fieldType]}</Badge>
 			</div>
 
 			<div className="flex flex-col gap-5 p-4">
@@ -18,6 +27,14 @@ export default function SettingsPanel() {
 					<SectionLabel>Field Label</SectionLabel>
 					<Input defaultValue="How did you hear about us?" />
 				</div>
+
+				{/* Placeholder — text-like fields only */}
+				{hasPlaceholder && (
+					<div className="flex flex-col gap-2">
+						<SectionLabel>Placeholder</SectionLabel>
+						<Input placeholder="Enter placeholder text..." />
+					</div>
+				)}
 
 				{/* Required toggle */}
 				<div className="flex items-center justify-between rounded-md border border-border px-3 py-2.5">
@@ -28,34 +45,14 @@ export default function SettingsPanel() {
 					<Toggle checked />
 				</div>
 
-				{/* Options */}
-				<div className="flex flex-col gap-2">
-					<div className="flex items-center justify-between">
-						<SectionLabel>Options</SectionLabel>
-						<button className="text-[11px] font-semibold text-brand hover:underline">
-							+ Add Option
-						</button>
-					</div>
+				{/* Options — choice fields */}
+				{hasOptions && <OptionsEditor />}
 
-					<div className="flex flex-col gap-1.5">
-						{options.map(option => (
-							<div
-								key={option}
-								className="flex items-center gap-2 rounded-md border border-border bg-surface-secondary px-2 py-1.5"
-							>
-								<GripVertical size={13} className="shrink-0 cursor-grab text-text-muted" />
-								<input
-									type="text"
-									defaultValue={option}
-									className="min-w-0 flex-1 bg-transparent text-[13px] text-text-primary outline-none"
-								/>
-								<button className="shrink-0 text-text-muted transition-colors hover:text-danger">
-									<X size={13} />
-								</button>
-							</div>
-						))}
-					</div>
-				</div>
+				{/* Rating config */}
+				{fieldType === 'rating' && <RatingConfig />}
+
+				{/* File config */}
+				{fieldType === 'file' && <FileConfig />}
 
 				{/* Help text */}
 				<div className="flex flex-col gap-2">
@@ -74,7 +71,7 @@ export default function SettingsPanel() {
 				</Button>
 			</div>
 
-			{/* Preview mode hint */}
+			{/* Preview hint */}
 			<div className="mx-4 mb-4 flex items-center gap-2 rounded-md bg-text-primary px-3 py-2.5">
 				<Eye size={14} className="shrink-0 text-white opacity-70" />
 				<div className="min-w-0">
