@@ -19,7 +19,7 @@ function App() {
         <Route path="/responses" element={<ResponsesPage />} />
         <Route path="/analytics" element={<AnalyticsPage />} />
         <Route path="/templates" element={<TemplatesPage />} />
-        <Route path="/preview" element={<PreviewPage />} />
+        <Route path="/preview/:formId" element={<PreviewPage />} />
         <Route
           path="/settings"
           element={<ComingSoonPage title="Settings" description="Workspace settings and integrations are coming soon." icon={Settings} />}
