@@ -41,6 +41,7 @@ interface FormBuilderState {
   deleteForm: (id: string) => void
   duplicateForm: (id: string) => string
   updateFormTitle: (id: string, title: string) => void
+  updateFormDescription: (id: string, description: string) => void
 
   // Field actions
   addField: (type: FieldType) => void
@@ -107,6 +108,14 @@ export const useFormBuilderStore = create<FormBuilderState>()(
         set(s => ({
           forms: s.forms.map(f =>
             f.id === id ? { ...f, title, updatedAt: Date.now() } : f
+          ),
+        }))
+      },
+
+      updateFormDescription(id, description) {
+        set(s => ({
+          forms: s.forms.map(f =>
+            f.id === id ? { ...f, description, updatedAt: Date.now() } : f
           ),
         }))
       },

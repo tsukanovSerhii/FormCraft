@@ -7,7 +7,7 @@ import {
 	Settings,
 	TrendingUp
 } from 'lucide-react'
-import { NavLink } from 'react-router'
+import { Link, NavLink } from 'react-router'
 
 const navItems = [
 	{ label: 'Forms', icon: FileText, to: '/forms' },
@@ -26,7 +26,7 @@ export default function Sidebar() {
 		<aside className="flex h-full w-56 shrink-0 flex-col border-r border-border bg-surface">
 			{/* Logo */}
 			<div className="flex h-14 items-center px-5">
-				<div className="flex items-center gap-2">
+				<Link to="/forms" className="flex items-center gap-2">
 					<div className="flex h-7 w-7 items-center justify-center rounded-sm bg-brand">
 						<svg width="16" height="16" viewBox="0 0 16 16" fill="none">
 							<rect x="2" y="2" width="5" height="5" rx="1" fill="white" />
@@ -38,7 +38,7 @@ export default function Sidebar() {
 					<span className="text-[15px] font-bold tracking-tight text-text-primary">
 						FormCraft
 					</span>
-				</div>
+				</Link>
 			</div>
 
 			{/* Workspace block */}
