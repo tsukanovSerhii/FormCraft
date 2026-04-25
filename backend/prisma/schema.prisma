@@ -1,0 +1,87 @@
+generator client {
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "debian-openssl-3.0.x"]
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  name         String
+  avatarUrl    String?
+  passwordHash String?
+  googleId     String?  @unique
+  githubId     String?  @unique
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  forms         Form[]
+  responses     Response[]
+  userTemplates UserTemplate[]
+
+  @@map("users")
+}
+
+model Form {
+  id            String    @id @default(cuid())
+  title         String
+  description   String?
+  status        String    @default("draft")
+  fields        Json      @default("[]")
+  expiresAt     DateTime?
+  maxResponses  Int?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  responses Response[]
+  versions  FormVersion[]
+
+  @@map("forms")
+}
+
+model FormVersion {
+  id        String   @id @default(cuid())
+  version   Int
+  title     String
+  fields    Json
+  createdAt DateTime @default(now())
+
+  formId String
+  form   Form   @relation(fields: [formId], references: [id], onDelete: Cascade)
+
+  @@map("form_versions")
+}
+
+model Response {
+  id          String   @id @default(cuid())
+  data        Json
+  submittedAt DateTime @default(now())
+
+  formId String
+  form   Form   @relation(fields: [formId], references: [id], onDelete: Cascade)
+
+  userId String?
+  user   User?   @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@map("responses")
+}
+
+model UserTemplate {
+  id          String   @id @default(cuid())
+  title       String
+  description String?
+  category    String   @default("Custom")
+  fields      Json     @default("[]")
+  createdAt   DateTime @default(now())
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("user_templates")
+}
