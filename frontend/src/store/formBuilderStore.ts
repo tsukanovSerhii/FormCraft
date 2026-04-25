@@ -46,6 +46,7 @@ interface FormBuilderState {
   duplicateForm: (id: string) => Promise<string>
   updateFormTitle: (id: string, title: string) => void
   updateFormDescription: (id: string, description: string) => void
+  updateFormSettings: (id: string, settings: { expiresAt?: string | null; maxResponses?: number | null }) => void
   publishForm: (id: string) => void
   syncForm: (id: string) => Promise<void>
 
@@ -157,6 +158,16 @@ export const useFormBuilderStore = create<FormBuilderState>()(
             f.id === id ? { ...f, description, updatedAt: Date.now() } : f
           ),
         }))
+      },
+
+      updateFormSettings(id, settings) {
+        set(s => ({
+          forms: s.forms.map(f =>
+            f.id === id ? { ...f, ...settings, updatedAt: Date.now() } : f
+          ),
+        }))
+        const form = get().forms.find(f => f.id === id)
+        if (form) formsApi.update(id, settings as never).catch(() => {})
       },
 
       publishForm(id) {

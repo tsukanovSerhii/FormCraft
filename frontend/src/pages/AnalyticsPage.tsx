@@ -88,9 +88,6 @@ export default function AnalyticsPage() {
     return Object.entries(buckets)
   }, [filteredResponses, days])
 
-  const maxPoint = Math.max(...chartPoints.map(([, v]) => v), 1)
-  const normalizedPoints = chartPoints.map(([label, v]) => ({ label, value: Math.round((v / maxPoint) * 100) }))
-
   const abandonedRate = 100 - completionRate
 
   return (
@@ -139,7 +136,7 @@ export default function AnalyticsPage() {
                 No responses yet in this period.
               </div>
             ) : (
-              <LineChart points={normalizedPoints.map(p => p.value)} labels={normalizedPoints.map(p => p.label)} />
+              <LineChart points={chartPoints.map(([, v]) => v)} labels={chartPoints.map(([l]) => l)} />
             )}
           </div>
 

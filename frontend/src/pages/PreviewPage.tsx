@@ -3,6 +3,7 @@ import { HelpCircle } from 'lucide-react'
 import { useState } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
 import { useNavigate, useParams } from 'react-router-dom'
+import { ErrorBoundary } from '@/components/ui/ErrorBoundary'
 import { PreviewTopBar } from '@/components/preview'
 import { FormRenderer, SuccessScreen } from '@/components/sections/FormRenderer'
 import { buildValidationSchema } from '@/schemas/fieldSchemas'
@@ -53,6 +54,7 @@ export default function PreviewPage() {
   }
 
   return (
+    <ErrorBoundary>
     <FormProvider {...methods}>
       <div className="flex min-h-screen flex-col bg-surface-secondary">
         <PreviewTopBar title={form.title} viewMode={viewMode} onViewModeChange={setViewMode} formId={formId} />
@@ -95,5 +97,6 @@ export default function PreviewPage() {
         </button>
       </div>
     </FormProvider>
+    </ErrorBoundary>
   )
 }

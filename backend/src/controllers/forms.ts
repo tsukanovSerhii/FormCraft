@@ -1,5 +1,6 @@
 import type { Request, Response } from 'express'
 import { z } from 'zod'
+import { Prisma } from '@prisma/client'
 import type { AuthRequest } from '../middleware/auth'
 import prisma from '../utils/prisma'
 
@@ -8,6 +9,8 @@ const formSchema = z.object({
   description: z.string().optional(),
   fields: z.array(z.any()).default([]),
   status: z.enum(['draft', 'published']).default('draft'),
+  expiresAt: z.string().datetime().optional().nullable(),
+  maxResponses: z.number().int().positive().optional().nullable(),
 })
 
 export async function getForms(req: Request, res: Response) {
@@ -57,6 +60,14 @@ export async function updateForm(req: Request, res: Response) {
   if (!existing) {
     res.status(404).json({ error: 'Form not found' })
     return
+  }
+
+  // Snapshot current state when publishing
+  if (parsed.data.status === 'published' && existing.status !== 'published') {
+    const count = await prisma.formVersion.count({ where: { formId: existing.id } })
+    await prisma.formVersion.create({
+      data: { formId: existing.id, version: count + 1, title: existing.title, fields: existing.fields as Prisma.InputJsonValue },
+    })
   }
 
   const form = await prisma.form.update({

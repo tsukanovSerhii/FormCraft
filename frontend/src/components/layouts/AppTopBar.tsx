@@ -1,6 +1,7 @@
 import { Bell } from 'lucide-react'
 import { NavLink } from 'react-router'
 import { IconButton } from '@/components/ui'
+import { ThemeToggle } from '@/components/ui/ThemeToggle'
 
 const tabs = [
 	{ label: 'Dashboard', to: '/forms' },
@@ -30,6 +31,7 @@ export default function AppTopBar() {
 			</nav>
 
 			<div className="flex items-center gap-2">
+				<ThemeToggle />
 				<IconButton><Bell size={17} /></IconButton>
 			</div>
 		</header>
