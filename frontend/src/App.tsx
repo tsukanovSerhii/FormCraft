@@ -9,6 +9,7 @@ import ComingSoonPage from '@/pages/ComingSoonPage'
 import DashboardPage from '@/pages/DashboardPage'
 import NotFoundPage from '@/pages/NotFoundPage'
 import PreviewPage from '@/pages/PreviewPage'
+import PublicFormPage from '@/pages/PublicFormPage'
 import ResponsesPage from '@/pages/ResponsesPage'
 import SettingsPage from '@/pages/SettingsPage'
 import TemplatesPage from '@/pages/TemplatesPage'
@@ -21,6 +22,7 @@ function App() {
         <Route path="/login" element={<AuthPage />} />
         <Route path="/auth/callback" element={<AuthCallbackPage />} />
         <Route path="/preview/:formId" element={<PreviewPage />} />
+        <Route path="/f/:formId" element={<PublicFormPage />} />
 
         {/* Protected routes */}
         <Route element={<ProtectedRoute />}>

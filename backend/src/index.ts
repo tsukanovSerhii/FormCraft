@@ -5,6 +5,7 @@ import express from 'express'
 import passport from 'passport'
 import authRoutes from './routes/auth'
 import formRoutes from './routes/forms'
+import publicRoutes from './routes/public'
 import responseRoutes from './routes/responses'
 import './services/passport'
 
@@ -24,6 +25,7 @@ app.use(passport.initialize())
 app.use('/api/auth', authRoutes)
 app.use('/api/forms', formRoutes)
 app.use('/api/responses', responseRoutes)
+app.use('/api/public', publicRoutes)
 
 app.get('/api/health', (_req, res) => {
   res.json({ status: 'ok' })
