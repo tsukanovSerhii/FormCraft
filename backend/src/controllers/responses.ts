@@ -1,6 +1,24 @@
 import type { Request, Response } from 'express'
+import { Prisma } from '@prisma/client'
 import type { AuthRequest } from '../middleware/auth'
 import prisma from '../utils/prisma'
+import { sanitizeResponseData } from '../utils/sanitize'
+
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+
+function validateFieldTypes(fields: unknown[], data: Record<string, unknown>): string | null {
+  for (const field of fields as Array<{ id: string; type: string; required?: boolean }>) {
+    const value = data[field.id]
+    if (value === undefined || value === null || value === '') continue
+    if (field.type === 'email' && typeof value === 'string' && !EMAIL_RE.test(value)) {
+      return `Field "${field.id}" must be a valid email address`
+    }
+    if (field.type === 'number' && isNaN(Number(value))) {
+      return `Field "${field.id}" must be a number`
+    }
+  }
+  return null
+}
 
 export async function submitResponse(req: Request, res: Response) {
   const { formId } = req.params
@@ -12,8 +30,17 @@ export async function submitResponse(req: Request, res: Response) {
     return
   }
 
+  const sanitized = sanitizeResponseData(req.body)
+
+  const fields = Array.isArray(form.fields) ? form.fields : []
+  const validationError = validateFieldTypes(fields, sanitized)
+  if (validationError) {
+    res.status(400).json({ error: validationError })
+    return
+  }
+
   const response = await prisma.response.create({
-    data: { formId, userId: userId ?? null, data: req.body },
+    data: { formId, userId: userId ?? null, data: sanitized as Prisma.InputJsonObject },
   })
   res.status(201).json(response)
 }

@@ -107,16 +107,14 @@
 
 ---
 
-## 🔜 Фаза 11 — Безпека і захист від XSS
-> Мета: захист від XSS-атак через форми і відповіді, hardened HTTP headers
-
-- [ ] **Sanitize form input на backend** — `DOMPurify` або `sanitize-html` для всіх текстових полів у відповідях перед збереженням у БД
-- [ ] **Content Security Policy (CSP)** — заголовок у nginx і Express, заборона inline scripts
-- [ ] **Helmet.js** — додати до Express (`X-Frame-Options`, `X-Content-Type-Options`, `Referrer-Policy`, `Permissions-Policy`)
-- [ ] **Rate limiting** — `express-rate-limit` на `/api/responses/:id/submit` (захист від flood)
-- [ ] **Escaping у FormRenderer** — переконатись що значення полів рендеряться як text, не innerHTML
-- [ ] **Валідація типів полів на backend** — перевіряти що дані відповідають очікуваному типу поля (email → валідний email, number → число)
-- [ ] **CSRF protection** — перевірка Origin header для мутуючих запитів
+## ✅ Фаза 11 — Безпека і захист від XSS
+- [x] **Sanitize form input на backend** — `sanitize-html` очищає всі текстові поля відповідей перед збереженням у БД (`src/utils/sanitize.ts`)
+- [x] **Content Security Policy (CSP)** — `helmet` з директивами `defaultSrc`, `scriptSrc`, `frameSrc: none`
+- [x] **Helmet.js** — встановлено і підключено (`X-Frame-Options`, `X-Content-Type-Options`, `Referrer-Policy` etc.)
+- [x] **Rate limiting** — `express-rate-limit` 30 req/15min на `POST /:formId/submit`
+- [x] **Escaping у FormRenderer** — підтверджено: жодного `dangerouslySetInnerHTML`, React екранує як text
+- [x] **Валідація типів полів на backend** — email → regex, number → `isNaN(Number(v))` у `submitResponse`
+- [x] **CSRF protection** — `csrfProtect` middleware перевіряє `Origin`/`Referer` для POST/PATCH/DELETE
 - [ ] **Audit залежностей** — `npm audit` у CI, блокувати build при critical вразливостях
 
 ---
