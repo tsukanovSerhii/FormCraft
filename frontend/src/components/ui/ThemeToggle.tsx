@@ -1,12 +1,7 @@
-import { createContext, useContext, useEffect, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import { Moon, Sun } from 'lucide-react'
-
-type Theme = 'light' | 'dark'
-
-export const ThemeContext = createContext<{ theme: Theme; toggle: () => void }>({
-  theme: 'light',
-  toggle: () => {},
-})
+import { ThemeContext } from './ThemeContext'
+import type { Theme } from './ThemeContext'
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
   const [theme, setTheme] = useState<Theme>(() => {
@@ -30,12 +25,8 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
   return <ThemeContext.Provider value={{ theme, toggle }}>{children}</ThemeContext.Provider>
 }
 
-function useTheme() {
-  return useContext(ThemeContext)
-}
-
 export function ThemeToggle({ className }: { className?: string }) {
-  const { theme, toggle } = useTheme()
+  const { theme, toggle } = useContext(ThemeContext)
   return (
     <button
       onClick={toggle}

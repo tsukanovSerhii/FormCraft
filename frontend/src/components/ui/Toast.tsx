@@ -1,6 +1,7 @@
 import { CheckCircle, X, XCircle } from 'lucide-react'
-import { createContext, useCallback, useState } from 'react'
+import { useCallback, useState } from 'react'
 import type { ReactNode } from 'react'
+import { ToastContext } from './ToastContext'
 
 type ToastType = 'success' | 'error'
 
@@ -9,13 +10,6 @@ interface Toast {
   message: string
   type: ToastType
 }
-
-interface ToastContextValue {
-  success: (message: string) => void
-  error: (message: string) => void
-}
-
-export const ToastContext = createContext<ToastContextValue | null>(null)
 
 let _id = 0
 
@@ -60,4 +54,3 @@ export function ToastProvider({ children }: { children: ReactNode }) {
     </ToastContext.Provider>
   )
 }
-

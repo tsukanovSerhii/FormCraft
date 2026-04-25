@@ -1,5 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
 import { Helmet } from 'react-helmet-async'
 import { useParams } from 'react-router-dom'
@@ -34,6 +34,7 @@ export default function PublicFormPage() {
   const [loading, setLoading] = useState(true)
   const [notFound, setNotFound] = useState(false)
   const [submitted, setSubmitted] = useState(false)
+  const mountedAt = useRef(Date.now()).current
 
   useEffect(() => {
     if (!formId) return
@@ -86,7 +87,6 @@ export default function PublicFormPage() {
     )
   }
 
-  const now = Date.now()
   const canonicalUrl = `${SITE_URL}/f/${formId}`
   const pageTitle = `${apiForm.title} — FormCraft`
   const pageDescription = apiForm.description ?? `Fill out ${apiForm.title} — powered by FormCraft`
@@ -150,7 +150,7 @@ export default function PublicFormPage() {
                 </div>
               ) : (
                 <FormRenderer
-                  form={{ ...apiForm, fields, description: apiForm.description ?? undefined, status: apiForm.status as 'draft' | 'published', responses: 0, createdAt: now, updatedAt: now }}
+                  form={{ ...apiForm, fields, description: apiForm.description ?? undefined, status: apiForm.status as 'draft' | 'published', responses: 0, createdAt: mountedAt, updatedAt: mountedAt }}
                   onSubmit={onSubmit}
                 />
               )}

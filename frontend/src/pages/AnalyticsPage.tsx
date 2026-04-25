@@ -1,5 +1,5 @@
 import { BarChart2, Calendar, CheckCircle2, TrendingUp, Users2 } from 'lucide-react'
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { DonutChart, LineChart } from '@/components/analytics'
 import { AppLayout } from '@/components/layouts'
 import { StatCard } from '@/components/ui'
@@ -32,12 +32,15 @@ export default function AnalyticsPage() {
   const { responses } = useResponsesStore()
 
   const days = filterDays(timeFilter)
+  const nowRef = useRef(Date.now())
+  useEffect(() => { nowRef.current = Date.now() }, [timeFilter])
 
   const filteredResponses = useMemo(
     () => {
-      const cutoff = Date.now() - days * 24 * 60 * 60 * 1000
+      const cutoff = nowRef.current - days * 24 * 60 * 60 * 1000
       return responses.filter(r => r.submittedAt >= cutoff)
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [responses, days]
   )
 
@@ -79,9 +82,9 @@ export default function AnalyticsPage() {
   const chartPoints = useMemo(() => {
     const buckets: Record<string, number> = {}
     const slotCount = days <= 7 ? days : days <= 30 ? 10 : 12
-    const now = Date.now()
+    const snapshotNow = nowRef.current
     for (let i = slotCount - 1; i >= 0; i--) {
-      const d = new Date(now - i * (days / slotCount) * 24 * 60 * 60 * 1000)
+      const d = new Date(snapshotNow - i * (days / slotCount) * 24 * 60 * 60 * 1000)
       buckets[d.toLocaleDateString('en', { month: 'short', day: 'numeric' })] = 0
     }
     filteredResponses.forEach(r => {
