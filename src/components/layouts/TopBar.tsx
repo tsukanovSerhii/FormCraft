@@ -6,7 +6,7 @@ import { useActiveForm, useFormBuilderStore } from '@/store/formBuilderStore'
 
 export default function TopBar() {
 	const form = useActiveForm()
-	const { updateFormTitle } = useFormBuilderStore()
+	const { updateFormTitle, publishForm } = useFormBuilderStore()
 	const navigate = useNavigate()
 	const [editing, setEditing] = useState(false)
 	const [draft, setDraft] = useState('')
@@ -74,7 +74,13 @@ export default function TopBar() {
 				<Button variant="outline" size="sm" icon={<Share2 size={14} />} onClick={handlePreview}>
 					Preview
 				</Button>
-				<Button variant="primary" size="sm">Publish</Button>
+				<Button
+					variant="primary"
+					size="sm"
+					onClick={() => form && publishForm(form.id)}
+				>
+					{form?.status === 'published' ? 'Published ✓' : 'Publish'}
+				</Button>
 			</div>
 		</header>
 	)

@@ -1,9 +1,24 @@
-import { Download, Eye } from 'lucide-react'
+import { Download, Eye, Inbox } from 'lucide-react'
 import { AppLayout } from '@/components/layouts'
-import { Button, StarRating, StatCard } from '@/components/ui'
-import { RESPONSES, RESPONSES_STATS } from '@/data/responses'
+import { Button } from '@/components/ui'
+import { useResponsesStore } from '@/store/responsesStore'
+
+function formatDate(ts: number) {
+	return new Intl.DateTimeFormat('en', { month: 'short', day: 'numeric', year: 'numeric' }).format(ts)
+}
+
+function formatTime(ts: number) {
+	return new Intl.DateTimeFormat('en', { hour: 'numeric', minute: '2-digit', hour12: true }).format(ts)
+}
+
+function initials(formTitle: string) {
+	return formTitle.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase()
+}
 
 export default function ResponsesPage() {
+	const { responses } = useResponsesStore()
+	const total = responses.length
+
 	return (
 		<AppLayout>
 			<div className="px-8 py-8">
@@ -12,11 +27,15 @@ export default function ResponsesPage() {
 					<div>
 						<div className="flex items-center gap-3">
 							<h1 className="text-[22px] font-bold text-text-primary">Form Responses</h1>
-							<span className="rounded-full bg-danger px-2.5 py-0.5 text-[11px] font-bold text-white">
-								LIVE
-							</span>
+							{total > 0 && (
+								<span className="rounded-full bg-danger px-2.5 py-0.5 text-[11px] font-bold text-white">
+									LIVE
+								</span>
+							)}
 						</div>
-						<p className="mt-0.5 text-[13px] text-text-muted">1,284 total submissions collected</p>
+						<p className="mt-0.5 text-[13px] text-text-muted">
+							{total} total submission{total !== 1 ? 's' : ''} collected
+						</p>
 					</div>
 					<div className="flex items-center gap-2">
 						<div className="relative">
@@ -33,68 +52,58 @@ export default function ResponsesPage() {
 					</div>
 				</div>
 
-				{/* Stats */}
-				<div className="mb-6 grid grid-cols-3 gap-4">
-					{RESPONSES_STATS.map(s => <StatCard key={s.label} {...s} uppercaseLabel />)}
-				</div>
-
-				{/* Table */}
-				<div className="rounded-lg border border-border bg-surface shadow-card">
-					<table className="w-full">
-						<thead>
-							<tr className="border-b border-border">
-								{['DATE SUBMITTED', 'RESPONDENT', 'EMAIL ADDRESS', 'FEEDBACK SCORE', 'ACTIONS'].map(col => (
-									<th key={col} className="px-5 py-3 text-left text-[11px] font-semibold uppercase tracking-wider text-text-muted">
-										{col}
-									</th>
-								))}
-							</tr>
-						</thead>
-						<tbody>
-							{RESPONSES.map((r, i) => (
-								<tr key={r.id} className={i < RESPONSES.length - 1 ? 'border-b border-border' : ''}>
-									<td className="px-5 py-4">
-										<p className="text-[13px] font-medium text-text-primary">{r.date}</p>
-										<p className="text-[12px] text-text-muted">{r.time}</p>
-									</td>
-									<td className="px-5 py-4">
-										<div className="flex items-center gap-2.5">
-											<span className={['flex h-7 w-7 items-center justify-center rounded-full text-[11px] font-bold', r.color].join(' ')}>
-												{r.initials}
-											</span>
-											<span className="text-[13px] font-medium text-text-primary">{r.name}</span>
-										</div>
-									</td>
-									<td className="px-5 py-4 text-[13px] text-text-secondary">{r.email}</td>
-									<td className="px-5 py-4"><StarRating score={r.score} /></td>
-									<td className="px-5 py-4">
-										<button className="flex h-7 w-7 items-center justify-center rounded-md text-text-muted transition-colors hover:bg-surface-secondary hover:text-text-primary">
-											<Eye size={15} />
-										</button>
-									</td>
+				{/* Empty state */}
+				{total === 0 ? (
+					<div className="flex flex-col items-center justify-center rounded-xl border-2 border-dashed border-border bg-surface py-20">
+						<div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-brand-muted text-brand">
+							<Inbox size={24} />
+						</div>
+						<p className="mt-4 text-[15px] font-semibold text-text-primary">No responses yet</p>
+						<p className="mt-1 text-[13px] text-text-muted">Share your form to start collecting responses.</p>
+					</div>
+				) : (
+					<div className="rounded-lg border border-border bg-surface shadow-card">
+						<table className="w-full">
+							<thead>
+								<tr className="border-b border-border">
+									{['DATE SUBMITTED', 'FORM', 'RESPONSE ID', 'ACTIONS'].map(col => (
+										<th key={col} className="px-5 py-3 text-left text-[11px] font-semibold uppercase tracking-wider text-text-muted">
+											{col}
+										</th>
+									))}
 								</tr>
-							))}
-						</tbody>
-					</table>
+							</thead>
+							<tbody>
+								{responses.map((r, i) => (
+									<tr key={r.id} className={i < responses.length - 1 ? 'border-b border-border' : ''}>
+										<td className="px-5 py-4">
+											<p className="text-[13px] font-medium text-text-primary">{formatDate(r.submittedAt)}</p>
+											<p className="text-[12px] text-text-muted">{formatTime(r.submittedAt)}</p>
+										</td>
+										<td className="px-5 py-4">
+											<div className="flex items-center gap-2.5">
+												<span className="flex h-7 w-7 items-center justify-center rounded-full bg-brand-muted text-[11px] font-bold text-brand">
+													{initials(r.formTitle)}
+												</span>
+												<span className="text-[13px] font-medium text-text-primary">{r.formTitle}</span>
+											</div>
+										</td>
+										<td className="px-5 py-4 text-[13px] text-text-muted font-mono">{r.id}</td>
+										<td className="px-5 py-4">
+											<button className="flex h-7 w-7 items-center justify-center rounded-md text-text-muted transition-colors hover:bg-surface-secondary hover:text-text-primary">
+												<Eye size={15} />
+											</button>
+										</td>
+									</tr>
+								))}
+							</tbody>
+						</table>
 
-					{/* Pagination */}
-					<div className="flex items-center justify-between border-t border-border px-5 py-3">
-						<p className="text-[12px] text-text-muted">Showing 1-25 of 1,284 responses</p>
-						<div className="flex items-center gap-1">
-							{['‹', '1', '2', '3', '...', '52', '›'].map((p, i) => (
-								<button
-									key={i}
-									className={[
-										'flex h-7 min-w-7 items-center justify-center rounded-md px-1.5 text-[13px] transition-colors',
-										p === '1' ? 'bg-brand text-white' : 'text-text-secondary hover:bg-surface-secondary',
-									].join(' ')}
-								>
-									{p}
-								</button>
-							))}
+						<div className="flex items-center justify-between border-t border-border px-5 py-3">
+							<p className="text-[12px] text-text-muted">Showing {total} response{total !== 1 ? 's' : ''}</p>
 						</div>
 					</div>
-				</div>
+				)}
 			</div>
 		</AppLayout>
 	)
