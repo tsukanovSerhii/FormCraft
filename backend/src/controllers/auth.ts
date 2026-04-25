@@ -114,6 +114,49 @@ export async function me(req: Request, res: Response) {
   res.json(user)
 }
 
+export async function updateProfile(req: Request, res: Response) {
+  const userId = (req as any).userId
+  const { name } = req.body
+  if (!name || typeof name !== 'string' || !name.trim()) {
+    res.status(400).json({ error: 'Name is required' })
+    return
+  }
+  const user = await prisma.user.update({
+    where: { id: userId },
+    data: { name: name.trim() },
+    select: { id: true, email: true, name: true, avatarUrl: true },
+  })
+  res.json(user)
+}
+
+export async function changePassword(req: Request, res: Response) {
+  const userId = (req as any).userId
+  const { currentPassword, newPassword } = req.body
+  if (!currentPassword || !newPassword || newPassword.length < 8) {
+    res.status(400).json({ error: 'Invalid request' })
+    return
+  }
+  const user = await prisma.user.findUnique({ where: { id: userId } })
+  if (!user?.passwordHash) {
+    res.status(400).json({ error: 'Account uses OAuth login, no password set' })
+    return
+  }
+  if (!(await bcrypt.compare(currentPassword, user.passwordHash))) {
+    res.status(401).json({ error: 'Current password is incorrect' })
+    return
+  }
+  const passwordHash = await bcrypt.hash(newPassword, 12)
+  await prisma.user.update({ where: { id: userId }, data: { passwordHash } })
+  res.json({ ok: true })
+}
+
+export async function deleteAccount(req: Request, res: Response) {
+  const userId = (req as any).userId
+  await prisma.user.delete({ where: { id: userId } })
+  res.clearCookie('refresh_token')
+  res.json({ ok: true })
+}
+
 export function oauthCallback(req: Request, res: Response) {
   const user = req.user as any
   const accessToken = signAccessToken(user.id)

@@ -11,4 +11,12 @@ export const authApi = {
   logout: () => api.post<{ ok: boolean }>('/api/auth/logout', {}),
 
   me: () => api.get<User>('/api/auth/me'),
+
+  updateProfile: (name: string) =>
+    api.patch<User>('/api/auth/me', { name }),
+
+  changePassword: (currentPassword: string, newPassword: string) =>
+    api.patch<{ ok: boolean }>('/api/auth/me/password', { currentPassword, newPassword }),
+
+  deleteAccount: () => api.delete<{ ok: boolean }>('/api/auth/me'),
 }

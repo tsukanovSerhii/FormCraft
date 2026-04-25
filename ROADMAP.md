@@ -65,16 +65,14 @@
 
 ---
 
-## 🔜 Фаза 7 — Settings і профіль користувача
-> Мета: керування акаунтом і налаштуваннями воркспейсу
-
-- [ ] **SettingsPage** — вкладки Profile / Security / Integrations
-  - [ ] Зміна імені і аватара (upload до S3 або локально)
-  - [ ] Зміна пароля (поточний → новий)
-  - [ ] Видалення акаунта
-- [ ] **Аватар у Sidebar** — показувати фото/ініціали залогованого юзера
-- [ ] **Logout** кнопка у Sidebar або AppTopBar
-- [ ] **AppTopBar** — показувати ім'я та аватар поточного юзера
+## ✅ Фаза 7 — Settings і профіль користувача
+- [x] **SettingsPage** — вкладки Profile / Security
+  - [x] Зміна імені (PATCH /api/auth/me)
+  - [x] Зміна пароля (PATCH /api/auth/me/password)
+  - [x] Видалення акаунта (DELETE /api/auth/me)
+- [x] **Аватар у Sidebar** — фото або ініціали з authStore
+- [x] **Logout** кнопка у Sidebar (нижній блок юзера)
+- [x] **AppTopBar** — ім'я та аватар, клік → /settings
 
 ---
 

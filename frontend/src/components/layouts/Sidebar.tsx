@@ -2,12 +2,15 @@ import {
 	BarChart2,
 	FileText,
 	HelpCircle,
+	LogOut,
 	MessageSquare,
 	Plus,
 	Settings,
 	TrendingUp
 } from 'lucide-react'
-import { Link, NavLink } from 'react-router'
+import { Link, NavLink, useNavigate } from 'react-router'
+import { authApi } from '@/api/auth'
+import { useAuthStore } from '@/store/authStore'
 
 const navItems = [
 	{ label: 'Forms', icon: FileText, to: '/forms' },
@@ -21,7 +24,28 @@ const bottomItems = [
 	{ label: 'Feedback', icon: MessageSquare, to: '/feedback' }
 ]
 
+function UserAvatar({ name, avatarUrl }: { name: string; avatarUrl?: string | null }) {
+	const initials = name.split(' ').map(p => p[0]).join('').toUpperCase().slice(0, 2)
+	if (avatarUrl) {
+		return <img src={avatarUrl} alt={name} className="h-8 w-8 rounded-full object-cover" />
+	}
+	return (
+		<div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-brand text-[12px] font-bold text-white">
+			{initials}
+		</div>
+	)
+}
+
 export default function Sidebar() {
+	const { user, clearAuth } = useAuthStore()
+	const navigate = useNavigate()
+
+	async function handleLogout() {
+		try { await authApi.logout() } catch { /* ignore */ }
+		clearAuth()
+		navigate('/login')
+	}
+
 	return (
 		<aside className="flex h-full w-56 shrink-0 flex-col border-r border-border bg-surface">
 			{/* Logo */}
@@ -52,10 +76,13 @@ export default function Sidebar() {
 						<p className="text-[11px] text-text-muted">Pro Plan</p>
 					</div>
 				</div>
-				<button className="flex h-7 w-full items-center justify-center gap-1.5 rounded-md bg-brand text-[12px] font-semibold text-white shadow-button transition-colors hover:bg-brand-dark">
+				<Link
+					to="/forms"
+					className="flex h-7 w-full items-center justify-center gap-1.5 rounded-md bg-brand text-[12px] font-semibold text-white shadow-button transition-colors hover:bg-brand-dark"
+				>
 					<Plus size={13} />
 					New Form
-				</button>
+				</Link>
 			</div>
 
 			{/* Main nav */}
@@ -80,7 +107,7 @@ export default function Sidebar() {
 			</nav>
 
 			{/* Bottom items */}
-			<div className="mt-auto flex flex-col gap-0.5 px-3 pb-4">
+			<div className="mt-auto flex flex-col gap-0.5 px-3 pb-2">
 				{bottomItems.map(({ label, icon: Icon, to }) => (
 					<NavLink
 						key={to}
@@ -92,6 +119,24 @@ export default function Sidebar() {
 					</NavLink>
 				))}
 			</div>
+
+			{/* User + logout */}
+			{user && (
+				<div className="mx-3 mb-3 flex items-center gap-2 rounded-lg border border-border bg-surface-secondary p-2.5">
+					<UserAvatar name={user.name} avatarUrl={user.avatarUrl} />
+					<div className="min-w-0 flex-1">
+						<p className="truncate text-[12px] font-semibold text-text-primary">{user.name}</p>
+						<p className="truncate text-[11px] text-text-muted">{user.email}</p>
+					</div>
+					<button
+						onClick={handleLogout}
+						title="Log out"
+						className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md text-text-muted transition-colors hover:bg-surface hover:text-text-primary"
+					>
+						<LogOut size={14} />
+					</button>
+				</div>
+			)}
 		</aside>
 	)
 }

@@ -1,4 +1,4 @@
-import { HelpCircle, MessageSquare, Settings } from 'lucide-react'
+import { HelpCircle, MessageSquare } from 'lucide-react'
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
 import ProtectedRoute from '@/components/layouts/ProtectedRoute'
 import AnalyticsPage from '@/pages/AnalyticsPage'
@@ -10,6 +10,7 @@ import DashboardPage from '@/pages/DashboardPage'
 import NotFoundPage from '@/pages/NotFoundPage'
 import PreviewPage from '@/pages/PreviewPage'
 import ResponsesPage from '@/pages/ResponsesPage'
+import SettingsPage from '@/pages/SettingsPage'
 import TemplatesPage from '@/pages/TemplatesPage'
 
 function App() {
@@ -29,10 +30,7 @@ function App() {
           <Route path="/responses" element={<ResponsesPage />} />
           <Route path="/analytics" element={<AnalyticsPage />} />
           <Route path="/templates" element={<TemplatesPage />} />
-          <Route
-            path="/settings"
-            element={<ComingSoonPage title="Settings" description="Workspace settings and integrations are coming soon." icon={Settings} />}
-          />
+          <Route path="/settings" element={<SettingsPage />} />
           <Route
             path="/support"
             element={<ComingSoonPage title="Support" description="Our help centre is on its way. Until then, reach us by email." icon={HelpCircle} />}
