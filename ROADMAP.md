@@ -129,14 +129,12 @@
 
 ---
 
-## 🔜 Фаза 13 — Тести і якість коду
-> Мета: надійність і захист від регресій
-
-- [ ] **Vitest** — unit-тести для store екшенів
-- [ ] **React Testing Library** — компонентні тести (FormCanvas, SettingsPanel)
-- [ ] **Supertest** — integration тести для API ендпоінтів
+## ✅ Фаза 13 — Тести і якість коду
+- [x] **Vitest** — 19 unit-тестів для `formBuilderStore` (create, delete, duplicate, publish, addField, removeField, updateField, reorderFields, duplicateField)
+- [x] **Vitest** — 23 unit-тести для `buildValidationSchema` (email, number, phone, text, radio, select, checkbox, rating, date)
+- [x] **Supertest** — 26 integration тестів для API (health, auth register/login/me, forms CRUD, public forms, responses submit/paginate)
+- [x] **Error Boundary** — `ErrorBoundary` компонент обгортає `BuilderLayout` і `PreviewPage`
 - [ ] **CI/CD** — GitHub Actions: lint + test + build при PR
-- [ ] **Error Boundary** — обгортка для BuilderLayout і PreviewPage
 
 ---
 
@@ -144,6 +142,73 @@
 - [ ] Inline редагування назви форми у `FormHeader` на канвасі
 - [ ] Workspace dropdown у Sidebar
 - [ ] `StatusBadge` у `DashboardPage/FormCard` — виділити в `ui/`
-- [ ] Rate limiting на API ендпоінтах
-- [ ] Валідація розміру файлів при upload
+- [ ] Rate limiting на API ендпоінтах (auth routes)
+- [ ] Валідація розміру файлів при upload (limit ~5MB)
 - [ ] `useTemplate` — мутує store напряму, треба перенести логіку в store action
+- [ ] `npm audit` у CI, блокувати build при critical вразливостях
+- [ ] Перейти з `node:20` на `node:22` в Dockerfile (вимога `@prisma/streams-local`)
+
+---
+
+## 🔜 Фаза 14 — Workspace і командна робота
+> Мета: дати можливість декільком людям працювати над формами разом
+
+- [ ] **Workspace model** — один акаунт = один або більше workspace, форми прив'язані до workspace
+- [ ] **Invite members** — запросити по email, роль: owner / editor / viewer
+- [ ] **Workspace switcher** у Sidebar (dropdown)
+- [ ] **Backend**: таблиці `Workspace`, `WorkspaceMember`, зміна belongsTo форм
+- [ ] **Permissions middleware** — перевіряти роль перед CRUD операціями
+
+---
+
+## 🔜 Фаза 15 — Notifications і real-time
+> Мета: миттєві сповіщення при нових відповідях
+
+- [ ] **Email notification** при новій відповіді (Resend SDK, fire-and-forget)
+- [ ] **In-app notification center** — дзвіночок у TopBar, список подій
+- [ ] **Real-time updates** — Server-Sent Events (SSE) для ResponsesPage без перезавантаження
+- [ ] **Notification preferences** у Settings — увімк/вимк email, вибір форм
+
+---
+
+## 🔜 Фаза 16 — Розширена аналітика
+> Мета: дати повну картину про кожну форму
+
+- [ ] **Funnel / drop-off** — на якому полі люди кидають форму (track field focus events)
+- [ ] **Heatmap по часу** — коли найбільше відповідей (по годинах / днях тижня)
+- [ ] **Field-level analytics** — розподіл відповідей для radio/checkbox/select як pie chart
+- [ ] **Completion rate** — % форм зі статусом "submitted" vs "abandoned"
+- [ ] **Export аналітики** — PDF/PNG звіт із графіками
+
+---
+
+## 🔜 Фаза 17 — Інтеграції
+> Мета: підключити FormCraft до інших сервісів
+
+- [ ] **Webhook** — надсилати POST запит на будь-який URL при новій відповіді (налаштовується per-form)
+- [ ] **Zapier / Make** — trigger "New Response" → будь-яка дія у 3rd-party
+- [ ] **Google Sheets** — авто-запис відповідей у spreadsheet (OAuth2 + Sheets API)
+- [ ] **Slack notification** — надсилати повідомлення у канал при новій відповіді
+- [ ] **API keys** — генерувати ключ для доступу до відповідей з зовнішніх систем
+
+---
+
+## 🔜 Фаза 18 — Кастомізація і брендинг
+> Мета: дати можливість підлаштувати публічну форму під бренд компанії
+
+- [ ] **Custom theme** per form — колір акценту, фон, шрифт (зберігається у `Form.theme` JSON)
+- [ ] **Logo upload** — замінити лого FormCraft на власне у шапці публічної форми
+- [ ] **Custom domain** — прив'язати `forms.yourdomain.com` (CNAME + wildcard cert)
+- [ ] **Remove FormCraft branding** — опція `hideBranding: true` у налаштуваннях форми
+- [ ] **Thank-you page redirect** — після submit перенаправляти на кастомний URL
+
+---
+
+## 🔜 Фаза 19 — Мобільний додаток (React Native)
+> Мета: переглядати відповіді і публікувати форми з телефону
+
+- [ ] **React Native + Expo** — окремий `mobile/` пакет у монорепо
+- [ ] **Auth** — JWT через secure storage, той самий backend
+- [ ] **Dashboard** — список форм, статус, кількість відповідей
+- [ ] **Response viewer** — перегляд останніх відповідей, push-сповіщення
+- [ ] **Form builder (MVP)** — drag полів, publish без десктопу

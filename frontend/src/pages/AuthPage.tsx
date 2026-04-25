@@ -1,8 +1,8 @@
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Eye, EyeOff, Loader2 } from 'lucide-react'
+import { ArrowLeft, Eye, EyeOff, Loader2 } from 'lucide-react'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { z } from 'zod'
 import { useAuthStore } from '@/store/authStore'
 
@@ -52,12 +52,12 @@ function PasswordInput({ register, error, placeholder = 'Enter password' }: {
         {...register}
         type={show ? 'text' : 'password'}
         placeholder={placeholder}
-        className={[
-          'w-full rounded-xl border bg-white px-4 py-3 pr-11 text-[14px] text-text-primary placeholder:text-text-placeholder outline-none transition-all',
-          error
-            ? 'border-error focus:ring-2 focus:ring-error/20'
-            : 'border-border focus:border-brand focus:ring-2 focus:ring-brand/15',
-        ].join(' ')}
+        className="w-full rounded-xl border px-4 py-3 pr-11 text-[14px] outline-none transition-all focus:ring-2"
+        style={{
+          background: '#fff',
+          color: '#111',
+          borderColor: error ? '#ef4444' : '#d1d5db',
+        }}
       />
       <button
         type="button"
@@ -73,9 +73,9 @@ function PasswordInput({ register, error, placeholder = 'Enter password' }: {
 function Field({ label, error, children }: { label: string; error?: string; children: React.ReactNode }) {
   return (
     <div className="flex flex-col gap-1.5">
-      <label className="text-[13px] font-medium text-text-primary">{label}</label>
+      <label className="text-[13px] font-medium" style={{ color: '#333' }}>{label}</label>
       {children}
-      {error && <p className="text-[12px] text-error">{error}</p>}
+      {error && <p className="text-[12px]" style={{ color: '#ef4444' }}>{error}</p>}
     </div>
   )
 }
@@ -114,12 +114,8 @@ function LoginForm({ onSwitch }: { onSwitch: () => void }) {
           {...register('email')}
           type="email"
           placeholder="name@company.com"
-          className={[
-            'w-full rounded-xl border bg-white px-4 py-3 text-[14px] text-text-primary placeholder:text-text-placeholder outline-none transition-all',
-            errors.email
-              ? 'border-error focus:ring-2 focus:ring-error/20'
-              : 'border-border focus:border-brand focus:ring-2 focus:ring-brand/15',
-          ].join(' ')}
+          className="w-full rounded-xl border px-4 py-3 text-[14px] outline-none transition-all focus:ring-2 focus:ring-[#6c63ff]/20"
+          style={{ background: '#fff', color: '#111', borderColor: errors.email ? '#ef4444' : '#d1d5db' }}
         />
       </Field>
 
@@ -144,11 +140,11 @@ function LoginForm({ onSwitch }: { onSwitch: () => void }) {
             </svg>
           </div>
         </div>
-        <span className="text-[13px] text-text-secondary">Remember me for 30 days</span>
+        <span className="text-[13px]" style={{ color: '#555' }}>Remember me for 30 days</span>
       </label>
 
       {serverError && (
-        <div className="rounded-xl bg-error/8 border border-error/20 px-4 py-3 text-[13px] text-error">
+        <div className="rounded-xl px-4 py-3 text-[13px]" style={{ background: '#fef2f2', border: '1px solid #fca5a5', color: '#dc2626' }}>
           {serverError}
         </div>
       )}
@@ -162,29 +158,31 @@ function LoginForm({ onSwitch }: { onSwitch: () => void }) {
       </button>
 
       <div className="relative flex items-center gap-3 py-1">
-        <div className="flex-1 h-px bg-border" />
-        <span className="text-[12px] text-text-muted">or continue with</span>
-        <div className="flex-1 h-px bg-border" />
+        <div className="flex-1 h-px" style={{ background: '#e5e7eb' }} />
+        <span className="text-[12px]" style={{ color: '#aaa' }}>or continue with</span>
+        <div className="flex-1 h-px" style={{ background: '#e5e7eb' }} />
       </div>
 
       <div className="grid grid-cols-2 gap-3">
         <a
           href={`${API}/api/auth/google`}
-          className="flex h-11 items-center justify-center gap-2.5 rounded-xl border border-border bg-white text-[13px] font-medium text-text-primary transition-all hover:bg-surface-secondary hover:border-border-strong"
+          className="flex h-11 items-center justify-center gap-2.5 rounded-xl border text-[13px] font-medium transition-all hover:bg-gray-50"
+          style={{ background: '#fff', borderColor: '#d1d5db', color: '#333' }}
         >
           <GoogleIcon />
           Google
         </a>
         <a
           href={`${API}/api/auth/github`}
-          className="flex h-11 items-center justify-center gap-2.5 rounded-xl border border-border bg-white text-[13px] font-medium text-text-primary transition-all hover:bg-surface-secondary hover:border-border-strong"
+          className="flex h-11 items-center justify-center gap-2.5 rounded-xl border text-[13px] font-medium transition-all hover:bg-gray-50"
+          style={{ background: '#fff', borderColor: '#d1d5db', color: '#333' }}
         >
           <svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.477 2 12c0 4.418 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.009-.868-.013-1.703-2.782.604-3.369-1.342-3.369-1.342-.454-1.155-1.11-1.463-1.11-1.463-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0112 6.836c.85.004 1.705.115 2.504.337 1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.203 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.578.688.48C19.138 20.163 22 16.418 22 12c0-5.523-4.477-10-10-10z"/></svg>
           GitHub
         </a>
       </div>
 
-      <p className="text-center text-[13px] text-text-muted">
+      <p className="text-center text-[13px]" style={{ color: '#888' }}>
         Don't have an account?{' '}
         <button type="button" onClick={onSwitch} className="font-semibold text-brand hover:underline">
           Create account
@@ -228,12 +226,8 @@ function RegisterForm({ onSwitch }: { onSwitch: () => void }) {
           {...register('name')}
           type="text"
           placeholder="Alex Rivera"
-          className={[
-            'w-full rounded-xl border bg-white px-4 py-3 text-[14px] text-text-primary placeholder:text-text-placeholder outline-none transition-all',
-            errors.name
-              ? 'border-error focus:ring-2 focus:ring-error/20'
-              : 'border-border focus:border-brand focus:ring-2 focus:ring-brand/15',
-          ].join(' ')}
+          className="w-full rounded-xl border px-4 py-3 text-[14px] outline-none transition-all focus:ring-2 focus:ring-[#6c63ff]/20"
+          style={{ background: '#fff', color: '#111', borderColor: errors.name ? '#ef4444' : '#d1d5db' }}
         />
       </Field>
 
@@ -242,12 +236,8 @@ function RegisterForm({ onSwitch }: { onSwitch: () => void }) {
           {...register('email')}
           type="email"
           placeholder="name@company.com"
-          className={[
-            'w-full rounded-xl border bg-white px-4 py-3 text-[14px] text-text-primary placeholder:text-text-placeholder outline-none transition-all',
-            errors.email
-              ? 'border-error focus:ring-2 focus:ring-error/20'
-              : 'border-border focus:border-brand focus:ring-2 focus:ring-brand/15',
-          ].join(' ')}
+          className="w-full rounded-xl border px-4 py-3 text-[14px] outline-none transition-all focus:ring-2 focus:ring-[#6c63ff]/20"
+          style={{ background: '#fff', color: '#111', borderColor: errors.email ? '#ef4444' : '#d1d5db' }}
         />
       </Field>
 
@@ -256,7 +246,7 @@ function RegisterForm({ onSwitch }: { onSwitch: () => void }) {
       </Field>
 
       {serverError && (
-        <div className="rounded-xl bg-error/8 border border-error/20 px-4 py-3 text-[13px] text-error">
+        <div className="rounded-xl px-4 py-3 text-[13px]" style={{ background: '#fef2f2', border: '1px solid #fca5a5', color: '#dc2626' }}>
           {serverError}
         </div>
       )}
@@ -270,29 +260,31 @@ function RegisterForm({ onSwitch }: { onSwitch: () => void }) {
       </button>
 
       <div className="relative flex items-center gap-3 py-1">
-        <div className="flex-1 h-px bg-border" />
-        <span className="text-[12px] text-text-muted">or continue with</span>
-        <div className="flex-1 h-px bg-border" />
+        <div className="flex-1 h-px" style={{ background: '#e5e7eb' }} />
+        <span className="text-[12px]" style={{ color: '#aaa' }}>or continue with</span>
+        <div className="flex-1 h-px" style={{ background: '#e5e7eb' }} />
       </div>
 
       <div className="grid grid-cols-2 gap-3">
         <a
           href={`${API}/api/auth/google`}
-          className="flex h-11 items-center justify-center gap-2.5 rounded-xl border border-border bg-white text-[13px] font-medium text-text-primary transition-all hover:bg-surface-secondary hover:border-border-strong"
+          className="flex h-11 items-center justify-center gap-2.5 rounded-xl border text-[13px] font-medium transition-all hover:bg-gray-50"
+          style={{ background: '#fff', borderColor: '#d1d5db', color: '#333' }}
         >
           <GoogleIcon />
           Google
         </a>
         <a
           href={`${API}/api/auth/github`}
-          className="flex h-11 items-center justify-center gap-2.5 rounded-xl border border-border bg-white text-[13px] font-medium text-text-primary transition-all hover:bg-surface-secondary hover:border-border-strong"
+          className="flex h-11 items-center justify-center gap-2.5 rounded-xl border text-[13px] font-medium transition-all hover:bg-gray-50"
+          style={{ background: '#fff', borderColor: '#d1d5db', color: '#333' }}
         >
           <svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.477 2 12c0 4.418 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.009-.868-.013-1.703-2.782.604-3.369-1.342-3.369-1.342-.454-1.155-1.11-1.463-1.11-1.463-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0112 6.836c.85.004 1.705.115 2.504.337 1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.203 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.578.688.48C19.138 20.163 22 16.418 22 12c0-5.523-4.477-10-10-10z"/></svg>
           GitHub
         </a>
       </div>
 
-      <p className="text-center text-[13px] text-text-muted">
+      <p className="text-center text-[13px]" style={{ color: '#888' }}>
         Already have an account?{' '}
         <button type="button" onClick={onSwitch} className="font-semibold text-brand hover:underline">
           Sign in
@@ -306,7 +298,7 @@ export default function AuthPage() {
   const [tab, setTab] = useState<'login' | 'register'>('login')
 
   return (
-    <div className="flex min-h-screen bg-surface-secondary">
+    <div className="light flex min-h-screen" style={{ colorScheme: 'light', background: '#f4f5f7' }}>
       {/* Left panel */}
       <div className="relative hidden lg:flex lg:w-[42%] flex-col justify-between overflow-hidden bg-gradient-to-br from-[#6c63ff] via-[#7c74ff] to-[#9b8fff] p-12">
         {/* Background decoration */}
@@ -322,7 +314,7 @@ export default function AuthPage() {
         </div>
 
         <div className="relative">
-          <div className="flex items-center gap-2.5">
+          <Link to="/" className="group inline-flex items-center gap-2.5 transition-opacity hover:opacity-80">
             <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-white/20 backdrop-blur-sm">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/>
@@ -331,7 +323,7 @@ export default function AuthPage() {
               </svg>
             </div>
             <span className="text-[17px] font-bold text-white tracking-tight">FormCraft</span>
-          </div>
+          </Link>
         </div>
 
         <div className="relative">
@@ -375,22 +367,39 @@ export default function AuthPage() {
       </div>
 
       {/* Right panel */}
-      <div className="flex flex-1 items-center justify-center px-6 py-12">
+      <div className="flex flex-1 items-center justify-center px-6 py-12" style={{ background: '#f4f5f7' }}>
         <div className="w-full max-w-[420px]">
-          {/* Mobile logo */}
-          <div className="mb-8 flex items-center gap-2 lg:hidden">
-            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-brand">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/>
-                <rect x="9" y="3" width="6" height="4" rx="1"/>
-              </svg>
-            </div>
-            <span className="text-[16px] font-bold text-text-primary">FormCraft</span>
+          {/* Back to home — desktop only (mobile has its own logo row) */}
+          <div className="mb-5 hidden lg:flex">
+            <Link
+              to="/"
+              className="inline-flex items-center gap-1.5 text-[13px] text-gray-500 transition-colors hover:text-gray-800"
+            >
+              <ArrowLeft size={13} />
+              Back to home
+            </Link>
           </div>
 
-          <div className="rounded-2xl border border-border bg-white p-8 shadow-panel">
+          {/* Mobile logo */}
+          <div className="mb-8 flex items-center justify-between lg:hidden">
+            <div className="flex items-center gap-2">
+              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-brand">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/>
+                  <rect x="9" y="3" width="6" height="4" rx="1"/>
+                </svg>
+              </div>
+              <span className="text-[16px] font-bold" style={{ color: '#111' }}>FormCraft</span>
+            </div>
+            <Link to="/" className="inline-flex items-center gap-1 text-[13px] text-gray-500 hover:text-gray-800 transition-colors">
+              <ArrowLeft size={13} />
+              Home
+            </Link>
+          </div>
+
+          <div className="rounded-2xl border p-8 shadow-panel" style={{ background: '#fff', borderColor: '#e5e7eb' }}>
             {/* Tabs */}
-            <div className="mb-7 flex rounded-xl bg-surface-secondary p-1">
+            <div className="mb-7 flex rounded-xl p-1" style={{ background: '#f4f5f7' }}>
               {(['login', 'register'] as const).map(t => (
                 <button
                   key={t}
@@ -398,9 +407,13 @@ export default function AuthPage() {
                   className={[
                     'flex-1 rounded-lg py-2 text-[13px] font-semibold transition-all',
                     tab === t
-                      ? 'bg-white text-text-primary shadow-card'
-                      : 'text-text-muted hover:text-text-secondary',
+                      ? 'shadow-card'
+                      : '',
                   ].join(' ')}
+                  style={tab === t
+                    ? { background: '#fff', color: '#111' }
+                    : { color: '#888' }
+                  }
                 >
                   {t === 'login' ? 'Login' : 'Register'}
                 </button>
@@ -408,10 +421,10 @@ export default function AuthPage() {
             </div>
 
             <div className="mb-6">
-              <h2 className="text-[22px] font-bold text-text-primary">
+              <h2 className="text-[22px] font-bold" style={{ color: '#111' }}>
                 {tab === 'login' ? 'Welcome Back' : 'Create Account'}
               </h2>
-              <p className="mt-1 text-[13px] text-text-muted">
+              <p className="mt-1 text-[13px]" style={{ color: '#888' }}>
                 {tab === 'login'
                   ? 'Enter your credentials to access your workspace.'
                   : 'Start building better forms today.'}

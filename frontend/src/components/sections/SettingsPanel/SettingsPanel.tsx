@@ -1,15 +1,26 @@
 import { Copy, Eye, Trash2 } from 'lucide-react'
 import { Badge, Button, Input, SectionLabel, Textarea, Toggle } from '@/components/ui'
-import { useFormBuilderStore, useSelectedField } from '@/store/formBuilderStore'
+import { useActiveForm, useFormBuilderStore, useSelectedField } from '@/store/formBuilderStore'
+import type { ConditionOperator } from '@/types/form'
 import DateConfig from './DateConfig'
 import FileConfig from './FileConfig'
 import OptionsEditor from './OptionsEditor'
 import RatingConfig from './RatingConfig'
 import { FIELD_TYPE_LABELS, OPTIONS_TYPES, PLACEHOLDER_TYPES } from './types'
 
+const OPERATORS: { value: ConditionOperator; label: string }[] = [
+	{ value: 'equals', label: 'equals' },
+	{ value: 'not_equals', label: 'does not equal' },
+	{ value: 'contains', label: 'contains' },
+	{ value: 'not_empty', label: 'is not empty' },
+]
+
 export default function SettingsPanel() {
 	const field = useSelectedField()
+	const form = useActiveForm()
 	const { updateField, duplicateField, removeField } = useFormBuilderStore()
+
+	const otherFields = form?.fields.filter(f => f.id !== field?.id) ?? []
 
 	if (!field) {
 		return (
@@ -81,6 +92,52 @@ export default function SettingsPanel() {
 
 				{/* File config */}
 				{field.type === 'file' && <FileConfig />}
+
+				{/* Conditional logic */}
+				{otherFields.length > 0 && (
+					<div className="flex flex-col gap-2">
+						<div className="flex items-center justify-between">
+							<SectionLabel>Show if</SectionLabel>
+							<Toggle
+								checked={!!field.condition}
+								onChange={on => updateField(field.id, {
+									condition: on
+										? { fieldId: otherFields[0].id, operator: 'not_empty', value: '' }
+										: undefined,
+								})}
+							/>
+						</div>
+						{field.condition && (
+							<div className="flex flex-col gap-2 rounded-md border border-border p-3">
+								<select
+									value={field.condition.fieldId}
+									onChange={e => updateField(field.id, { condition: { ...field.condition!, fieldId: e.target.value } })}
+									className="rounded-md border border-border bg-surface px-2 py-1.5 text-[12px] text-text-primary"
+								>
+									{otherFields.map(f => (
+										<option key={f.id} value={f.id}>{f.label}</option>
+									))}
+								</select>
+								<select
+									value={field.condition.operator}
+									onChange={e => updateField(field.id, { condition: { ...field.condition!, operator: e.target.value as ConditionOperator } })}
+									className="rounded-md border border-border bg-surface px-2 py-1.5 text-[12px] text-text-primary"
+								>
+									{OPERATORS.map(op => (
+										<option key={op.value} value={op.value}>{op.label}</option>
+									))}
+								</select>
+								{field.condition.operator !== 'not_empty' && (
+									<Input
+										value={field.condition.value}
+										placeholder="Value..."
+										onChange={e => updateField(field.id, { condition: { ...field.condition!, value: e.target.value } })}
+									/>
+								)}
+							</div>
+						)}
+					</div>
+				)}
 
 				{/* Help text */}
 				<div className="flex flex-col gap-2">

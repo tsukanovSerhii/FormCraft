@@ -1,7 +1,8 @@
-import { ArrowLeft, Bell, BookmarkPlus, Eye, HelpCircle, Share2 } from 'lucide-react'
+import { ArrowLeft, Bell, BookmarkPlus, Eye, HelpCircle, History, Settings2, Share2 } from 'lucide-react'
 import { useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { templatesApi } from '@/api/templates'
+import { versionsApi, type FormVersion } from '@/api/versions'
 import { Button, IconButton } from '@/components/ui'
 import ShareModal from '@/components/ui/ShareModal'
 import { useToast } from '@/components/ui/Toast'
@@ -9,12 +10,18 @@ import { useActiveForm, useFormBuilderStore } from '@/store/formBuilderStore'
 
 export default function TopBar() {
 	const form = useActiveForm()
-	const { updateFormTitle, publishForm } = useFormBuilderStore()
+	const { updateFormTitle, publishForm, updateFormSettings } = useFormBuilderStore()
 	const navigate = useNavigate()
 	const [editing, setEditing] = useState(false)
 	const [draft, setDraft] = useState('')
 	const [shareOpen, setShareOpen] = useState(false)
 	const [saving, setSaving] = useState(false)
+	const [historyOpen, setHistoryOpen] = useState(false)
+	const [versions, setVersions] = useState<FormVersion[]>([])
+	const [versionsLoading, setVersionsLoading] = useState(false)
+	const [formSettingsOpen, setFormSettingsOpen] = useState(false)
+	const [expiresAt, setExpiresAt] = useState('')
+	const [maxResponses, setMaxResponses] = useState('')
 	const inputRef = useRef<HTMLInputElement>(null)
 	const toast = useToast()
 
@@ -32,6 +39,30 @@ export default function TopBar() {
 	function handleKeyDown(e: React.KeyboardEvent) {
 		if (e.key === 'Enter') commit()
 		if (e.key === 'Escape') setEditing(false)
+	}
+
+	async function openHistory() {
+		if (!form) return
+		setHistoryOpen(true)
+		setVersionsLoading(true)
+		try {
+			setVersions(await versionsApi.getAll(form.id))
+		} catch {
+			toast.error('Failed to load history')
+		} finally {
+			setVersionsLoading(false)
+		}
+	}
+
+	async function handleRestore(versionId: string) {
+		if (!form) return
+		try {
+			await versionsApi.restore(form.id, versionId)
+			toast.success('Version restored — reload to see changes')
+			setHistoryOpen(false)
+		} catch {
+			toast.error('Failed to restore version')
+		}
 	}
 
 	async function handleSaveTemplate() {
@@ -86,6 +117,20 @@ export default function TopBar() {
 				<div className="flex items-center gap-2">
 					<IconButton><HelpCircle size={17} /></IconButton>
 					<IconButton><Bell size={17} /></IconButton>
+					<IconButton onClick={openHistory} title="Version history" disabled={!form}>
+						<History size={16} />
+					</IconButton>
+					<IconButton
+						onClick={() => {
+							setExpiresAt(form?.expiresAt ? form.expiresAt.slice(0, 10) : '')
+							setMaxResponses(form?.maxResponses ? String(form.maxResponses) : '')
+							setFormSettingsOpen(true)
+						}}
+						title="Form settings"
+						disabled={!form}
+					>
+						<Settings2 size={16} />
+					</IconButton>
 
 					<div className="mx-2 h-5 w-px bg-border" />
 
@@ -130,6 +175,97 @@ export default function TopBar() {
 					formTitle={form.title}
 					onClose={() => setShareOpen(false)}
 				/>
+			)}
+
+			{formSettingsOpen && form && (
+				<div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm">
+					<div className="w-full max-w-sm rounded-2xl border border-border bg-surface shadow-panel">
+						<div className="flex items-center justify-between border-b border-border px-5 py-4">
+							<p className="text-[15px] font-semibold text-text-primary">Form Settings</p>
+							<button onClick={() => setFormSettingsOpen(false)} className="text-text-muted hover:text-text-primary">✕</button>
+						</div>
+						<div className="flex flex-col gap-5 p-5">
+							<div className="flex flex-col gap-1.5">
+								<label className="text-[12px] font-medium text-text-secondary">Expiry date</label>
+								<input
+									type="date"
+									value={expiresAt}
+									onChange={e => setExpiresAt(e.target.value)}
+									className="h-9 rounded-md border border-border bg-surface px-3 text-[13px] text-text-primary focus:border-brand focus:outline-none"
+								/>
+								<p className="text-[11px] text-text-muted">Form stops accepting responses after this date.</p>
+							</div>
+							<div className="flex flex-col gap-1.5">
+								<label className="text-[12px] font-medium text-text-secondary">Max responses</label>
+								<input
+									type="number"
+									min={1}
+									value={maxResponses}
+									onChange={e => setMaxResponses(e.target.value)}
+									placeholder="Unlimited"
+									className="h-9 rounded-md border border-border bg-surface px-3 text-[13px] text-text-primary focus:border-brand focus:outline-none"
+								/>
+								<p className="text-[11px] text-text-muted">Close the form automatically after this many responses.</p>
+							</div>
+						</div>
+						<div className="flex gap-2 border-t border-border px-5 py-4">
+							<button
+								onClick={() => setFormSettingsOpen(false)}
+								className="flex-1 rounded-md border border-border py-2 text-[13px] font-medium text-text-secondary transition-colors hover:border-border-strong"
+							>
+								Cancel
+							</button>
+							<button
+								onClick={() => {
+									updateFormSettings(form.id, {
+										expiresAt: expiresAt ? new Date(expiresAt).toISOString() : null,
+										maxResponses: maxResponses ? parseInt(maxResponses) : null,
+									})
+									setFormSettingsOpen(false)
+									toast.success('Settings saved')
+								}}
+								className="flex-1 rounded-md bg-brand py-2 text-[13px] font-medium text-white transition-opacity hover:opacity-90"
+							>
+								Save
+							</button>
+						</div>
+					</div>
+				</div>
+			)}
+
+			{historyOpen && (
+				<div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm">
+					<div className="w-full max-w-md rounded-2xl border border-border bg-surface shadow-panel">
+						<div className="flex items-center justify-between border-b border-border px-5 py-4">
+							<p className="text-[15px] font-semibold text-text-primary">Version History</p>
+							<button onClick={() => setHistoryOpen(false)} className="text-text-muted hover:text-text-primary">✕</button>
+						</div>
+						<div className="max-h-80 overflow-y-auto">
+							{versionsLoading ? (
+								<div className="flex items-center justify-center py-10">
+									<div className="h-6 w-6 animate-spin rounded-full border-2 border-brand border-t-transparent" />
+								</div>
+							) : versions.length === 0 ? (
+								<p className="py-10 text-center text-[13px] text-text-muted">
+									No versions yet. Versions are saved when you publish a form.
+								</p>
+							) : versions.map(v => (
+								<div key={v.id} className="flex items-center justify-between border-b border-border px-5 py-3.5 last:border-0">
+									<div>
+										<p className="text-[13px] font-medium text-text-primary">v{v.version} — {v.title}</p>
+										<p className="text-[11px] text-text-muted">{new Date(v.createdAt).toLocaleString()}</p>
+									</div>
+									<button
+										onClick={() => handleRestore(v.id)}
+										className="rounded-md border border-border px-3 py-1 text-[12px] font-medium text-text-secondary transition-colors hover:border-brand hover:text-brand"
+									>
+										Restore
+									</button>
+								</div>
+							))}
+						</div>
+					</div>
+				</div>
 			)}
 		</>
 	)

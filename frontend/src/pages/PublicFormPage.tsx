@@ -58,7 +58,13 @@ export default function PublicFormPage() {
     if (!formId) return
     try {
       await responsesApi.submit(formId, data)
-    } catch { /* best-effort */ }
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : ''
+      if (msg.includes('expired') || msg.includes('maximum')) {
+        setNotFound(true)
+        return
+      }
+    }
     setSubmitted(true)
   }
 

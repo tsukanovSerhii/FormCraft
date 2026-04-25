@@ -119,7 +119,7 @@ export default function Sidebar() {
 						<p className="truncate text-[12px] font-semibold text-text-primary">{user.name}</p>
 						<p className="truncate text-[11px] text-text-muted">{user.email}</p>
 					</div>
-					<button
+<button
 						onClick={handleLogout}
 						title="Log out"
 						className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md text-text-muted transition-colors hover:bg-surface hover:text-text-primary"

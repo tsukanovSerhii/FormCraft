@@ -26,20 +26,36 @@ model User {
 }
 
 model Form {
-  id          String   @id @default(cuid())
-  title       String
-  description String?
-  status      String   @default("draft")
-  fields      Json     @default("[]")
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id            String    @id @default(cuid())
+  title         String
+  description   String?
+  status        String    @default("draft")
+  fields        Json      @default("[]")
+  expiresAt     DateTime?
+  maxResponses  Int?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
 
   userId String
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   responses Response[]
+  versions  FormVersion[]
 
   @@map("forms")
+}
+
+model FormVersion {
+  id        String   @id @default(cuid())
+  version   Int
+  title     String
+  fields    Json
+  createdAt DateTime @default(now())
+
+  formId String
+  form   Form   @relation(fields: [formId], references: [id], onDelete: Cascade)
+
+  @@map("form_versions")
 }
 
 model Response {

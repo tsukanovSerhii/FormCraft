@@ -3,6 +3,7 @@ import { Prisma } from '@prisma/client'
 import type { AuthRequest } from '../middleware/auth'
 import prisma from '../utils/prisma'
 import { sanitizeResponseData } from '../utils/sanitize'
+import { sendNewResponseEmail } from '../services/email'
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
@@ -30,6 +31,19 @@ export async function submitResponse(req: Request, res: Response) {
     return
   }
 
+  if (form.expiresAt && new Date() > form.expiresAt) {
+    res.status(410).json({ error: 'This form has expired and is no longer accepting responses.' })
+    return
+  }
+
+  if (form.maxResponses) {
+    const count = await prisma.response.count({ where: { formId } })
+    if (count >= form.maxResponses) {
+      res.status(410).json({ error: 'This form has reached its maximum number of responses.' })
+      return
+    }
+  }
+
   const sanitized = sanitizeResponseData(req.body)
 
   const fields = Array.isArray(form.fields) ? form.fields : []
@@ -42,6 +56,21 @@ export async function submitResponse(req: Request, res: Response) {
   const response = await prisma.response.create({
     data: { formId, userId: userId ?? null, data: sanitized as Prisma.InputJsonObject },
   })
+
+  // Fire-and-forget email to form owner
+  prisma.user.findUnique({ where: { id: form.userId }, select: { email: true } })
+    .then(owner => {
+      if (owner) {
+        sendNewResponseEmail({
+          to: owner.email,
+          formTitle: form.title,
+          formId,
+          responseId: response.id,
+        }).catch(() => {})
+      }
+    })
+    .catch(() => {})
+
   res.status(201).json(response)
 }
 
