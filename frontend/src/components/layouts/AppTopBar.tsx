@@ -1,4 +1,4 @@
-import { Bell, HelpCircle } from 'lucide-react'
+import { Bell } from 'lucide-react'
 import { NavLink } from 'react-router'
 import { IconButton } from '@/components/ui'
 
@@ -30,13 +30,7 @@ export default function AppTopBar() {
 			</nav>
 
 			<div className="flex items-center gap-2">
-				<IconButton><HelpCircle size={17} /></IconButton>
 				<IconButton><Bell size={17} /></IconButton>
-
-				{/* Avatar */}
-				<div className="ml-1 flex h-8 w-8 items-center justify-center rounded-full bg-brand text-[12px] font-bold text-white">
-					F
-				</div>
 			</div>
 		</header>
 	)
