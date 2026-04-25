@@ -27,9 +27,61 @@ export async function getResponses(req: Request, res: Response) {
     return
   }
 
+  const page = Math.max(1, parseInt(req.query.page as string) || 1)
+  const limit = Math.min(100, parseInt(req.query.limit as string) || 20)
+  const skip = (page - 1) * limit
+
+  const [responses, total] = await Promise.all([
+    prisma.response.findMany({
+      where: { formId: req.params.formId },
+      orderBy: { submittedAt: 'desc' },
+      skip,
+      take: limit,
+    }),
+    prisma.response.count({ where: { formId: req.params.formId } }),
+  ])
+
+  res.json({ responses, total, page, limit, pages: Math.ceil(total / limit) })
+}
+
+export async function exportCSV(req: Request, res: Response) {
+  const userId = (req as AuthRequest).userId
+
+  const form = await prisma.form.findFirst({ where: { id: req.params.formId, userId } })
+  if (!form) {
+    res.status(404).json({ error: 'Form not found' })
+    return
+  }
+
   const responses = await prisma.response.findMany({
     where: { formId: req.params.formId },
     orderBy: { submittedAt: 'desc' },
   })
-  res.json(responses)
+
+  if (responses.length === 0) {
+    res.status(200).setHeader('Content-Type', 'text/csv').send('No responses yet')
+    return
+  }
+
+  const allKeys = Array.from(
+    new Set(responses.flatMap(r => Object.keys(r.data as Record<string, unknown>)))
+  )
+
+  const escape = (v: unknown) => {
+    const s = Array.isArray(v) ? v.join('; ') : String(v ?? '')
+    return `"${s.replace(/"/g, '""')}"`
+  }
+
+  const header = ['id', 'submittedAt', ...allKeys].map(escape).join(',')
+  const rows = responses.map(r => {
+    const data = r.data as Record<string, unknown>
+    return [r.id, r.submittedAt.toISOString(), ...allKeys.map(k => data[k] ?? '')].map(escape).join(',')
+  })
+
+  const csv = [header, ...rows].join('\n')
+  const filename = `${form.title.replace(/[^a-z0-9]/gi, '_')}_responses.csv`
+
+  res.setHeader('Content-Type', 'text/csv')
+  res.setHeader('Content-Disposition', `attachment; filename="${filename}"`)
+  res.send(csv)
 }

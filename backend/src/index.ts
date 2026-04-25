@@ -7,6 +7,7 @@ import authRoutes from './routes/auth'
 import formRoutes from './routes/forms'
 import publicRoutes from './routes/public'
 import responseRoutes from './routes/responses'
+import templateRoutes from './routes/templates'
 import './services/passport'
 
 dotenv.config()
@@ -26,6 +27,7 @@ app.use('/api/auth', authRoutes)
 app.use('/api/forms', formRoutes)
 app.use('/api/responses', responseRoutes)
 app.use('/api/public', publicRoutes)
+app.use('/api/templates', templateRoutes)
 
 app.get('/api/health', (_req, res) => {
   res.json({ status: 'ok' })
