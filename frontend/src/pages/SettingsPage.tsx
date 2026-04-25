@@ -37,8 +37,8 @@ function ProfileTab() {
       const token = useAuthStore.getState().accessToken!
       setAuth(updated, token)
       setMsg('Profile updated.')
-    } catch (err: any) {
-      setError(err.message)
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Something went wrong')
     } finally {
       setSaving(false)
     }
@@ -118,8 +118,8 @@ function SecurityTab() {
       await authApi.changePassword(current, next)
       setMsg('Password changed successfully.')
       setCurrent(''); setNext(''); setConfirm('')
-    } catch (err: any) {
-      setError(err.message)
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Something went wrong')
     } finally {
       setSaving(false)
     }
@@ -131,8 +131,8 @@ function SecurityTab() {
       await authApi.deleteAccount()
       clearAuth()
       navigate('/login')
-    } catch (err: any) {
-      setError(err.message)
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Something went wrong')
       setDeleting(false)
     }
   }

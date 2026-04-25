@@ -4,10 +4,12 @@ import { useFormBuilderStore } from '@/store/formBuilderStore'
 export function useAutoSave(formId: string | undefined, delay = 2000) {
   const { forms, syncForm } = useFormBuilderStore()
   const syncRef = useRef(syncForm)
-  syncRef.current = syncForm
-
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
   const prevUpdatedAt = useRef<number | null>(null)
+
+  useEffect(() => {
+    syncRef.current = syncForm
+  })
 
   useEffect(() => {
     if (!formId) return
@@ -30,5 +32,5 @@ export function useAutoSave(formId: string | undefined, delay = 2000) {
     return () => {
       if (timerRef.current) clearTimeout(timerRef.current)
     }
-  }, [formId, forms])
+  }, [formId, forms, delay])
 }

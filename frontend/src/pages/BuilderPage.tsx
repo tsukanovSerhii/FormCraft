@@ -10,7 +10,10 @@ export default function BuilderPage() {
   const navigate = useNavigate()
   const { forms, setActiveForm, syncForm } = useFormBuilderStore()
   const syncRef = useRef(syncForm)
-  syncRef.current = syncForm
+
+  useEffect(() => {
+    syncRef.current = syncForm
+  })
 
   useAutoSave(formId)
 
@@ -24,6 +27,7 @@ export default function BuilderPage() {
     setActiveForm(formId)
 
     return () => { syncRef.current(formId) }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [formId])
 
   return (

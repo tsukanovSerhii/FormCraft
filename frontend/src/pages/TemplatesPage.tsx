@@ -1,6 +1,7 @@
 import { templatesApi, type UserTemplate } from '@/api/templates'
+import type { FormField } from '@/types/form'
 import { AppLayout } from '@/components/layouts'
-import { useToast } from '@/components/ui/Toast'
+import { useToast } from '@/components/ui/useToast'
 import { TEMPLATE_CATEGORIES, TEMPLATES } from '@/data/templates'
 import { useTemplate } from '@/hooks'
 import { FileText, Search, Trash2 } from 'lucide-react'
@@ -34,7 +35,7 @@ export default function TemplatesPage() {
 			category: t.category,
 			icon: FileText,
 			color: 'bg-brand-muted text-brand',
-			fields: t.fields as any
+			fields: t.fields as FormField[]
 		})
 	}
 

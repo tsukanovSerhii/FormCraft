@@ -11,7 +11,7 @@ export default function FileConfig() {
 			const next = new Set(prev)
 			if (type === 'Any') return new Set(['Any'])
 			next.delete('Any')
-			next.has(type) ? next.delete(type) : next.add(type)
+			if (next.has(type)) { next.delete(type) } else { next.add(type) }
 			if (next.size === 0) return new Set(['Any'])
 			return next
 		})

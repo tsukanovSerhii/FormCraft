@@ -41,7 +41,7 @@ function GoogleIcon() {
 }
 
 function PasswordInput({ register, error, placeholder = 'Enter password' }: {
-  register: any
+  register: import('react-hook-form').UseFormRegisterReturn
   error?: string
   placeholder?: string
 }) {
@@ -102,8 +102,8 @@ function LoginForm({ onSwitch }: { onSwitch: () => void }) {
       if (!res.ok) throw new Error(json.error ?? 'Login failed')
       setAuth(json.user, json.accessToken)
       navigate('/forms')
-    } catch (e: any) {
-      setServerError(e.message)
+    } catch (e) {
+      setServerError(e instanceof Error ? e.message : 'Something went wrong')
     }
   }
 
@@ -214,8 +214,8 @@ function RegisterForm({ onSwitch }: { onSwitch: () => void }) {
       if (!res.ok) throw new Error(json.error ?? 'Registration failed')
       setAuth(json.user, json.accessToken)
       navigate('/forms')
-    } catch (e: any) {
-      setServerError(e.message)
+    } catch (e) {
+      setServerError(e instanceof Error ? e.message : 'Something went wrong')
     }
   }
 

@@ -32,11 +32,13 @@ export default function AnalyticsPage() {
   const { responses } = useResponsesStore()
 
   const days = filterDays(timeFilter)
-  const cutoff = Date.now() - days * 24 * 60 * 60 * 1000
 
   const filteredResponses = useMemo(
-    () => responses.filter(r => r.submittedAt >= cutoff),
-    [responses, cutoff]
+    () => {
+      const cutoff = Date.now() - days * 24 * 60 * 60 * 1000
+      return responses.filter(r => r.submittedAt >= cutoff)
+    },
+    [responses, days]
   )
 
   const totalForms = forms.length
@@ -77,8 +79,9 @@ export default function AnalyticsPage() {
   const chartPoints = useMemo(() => {
     const buckets: Record<string, number> = {}
     const slotCount = days <= 7 ? days : days <= 30 ? 10 : 12
+    const now = Date.now()
     for (let i = slotCount - 1; i >= 0; i--) {
-      const d = new Date(Date.now() - i * (days / slotCount) * 24 * 60 * 60 * 1000)
+      const d = new Date(now - i * (days / slotCount) * 24 * 60 * 60 * 1000)
       buckets[d.toLocaleDateString('en', { month: 'short', day: 'numeric' })] = 0
     }
     filteredResponses.forEach(r => {

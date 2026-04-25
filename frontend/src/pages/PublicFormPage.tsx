@@ -86,6 +86,7 @@ export default function PublicFormPage() {
     )
   }
 
+  const now = Date.now()
   const canonicalUrl = `${SITE_URL}/f/${formId}`
   const pageTitle = `${apiForm.title} — FormCraft`
   const pageDescription = apiForm.description ?? `Fill out ${apiForm.title} — powered by FormCraft`
@@ -149,7 +150,7 @@ export default function PublicFormPage() {
                 </div>
               ) : (
                 <FormRenderer
-                  form={{ ...apiForm, fields, description: apiForm.description ?? undefined, status: apiForm.status as 'draft' | 'published', responses: 0, createdAt: Date.now(), updatedAt: Date.now() }}
+                  form={{ ...apiForm, fields, description: apiForm.description ?? undefined, status: apiForm.status as 'draft' | 'published', responses: 0, createdAt: now, updatedAt: now }}
                   onSubmit={onSubmit}
                 />
               )}

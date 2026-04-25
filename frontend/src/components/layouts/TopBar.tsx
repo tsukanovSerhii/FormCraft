@@ -5,7 +5,7 @@ import { templatesApi } from '@/api/templates'
 import { versionsApi, type FormVersion } from '@/api/versions'
 import { Button, IconButton } from '@/components/ui'
 import ShareModal from '@/components/ui/ShareModal'
-import { useToast } from '@/components/ui/Toast'
+import { useToast } from '@/components/ui/useToast'
 import { useActiveForm, useFormBuilderStore } from '@/store/formBuilderStore'
 
 export default function TopBar() {
