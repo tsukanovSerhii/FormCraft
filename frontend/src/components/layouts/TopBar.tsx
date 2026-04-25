@@ -2,6 +2,7 @@ import { ArrowLeft, Bell, HelpCircle, Share2 } from 'lucide-react'
 import { useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Button, IconButton } from '@/components/ui'
+import ShareModal from '@/components/ui/ShareModal'
 import { useActiveForm, useFormBuilderStore } from '@/store/formBuilderStore'
 
 export default function TopBar() {
@@ -10,6 +11,7 @@ export default function TopBar() {
 	const navigate = useNavigate()
 	const [editing, setEditing] = useState(false)
 	const [draft, setDraft] = useState('')
+	const [shareOpen, setShareOpen] = useState(false)
 	const inputRef = useRef<HTMLInputElement>(null)
 
 	function startEditing() {
@@ -19,9 +21,7 @@ export default function TopBar() {
 	}
 
 	function commit() {
-		if (form && draft.trim()) {
-			updateFormTitle(form.id, draft.trim())
-		}
+		if (form && draft.trim()) updateFormTitle(form.id, draft.trim())
 		setEditing(false)
 	}
 
@@ -30,58 +30,78 @@ export default function TopBar() {
 		if (e.key === 'Escape') setEditing(false)
 	}
 
-	function handlePreview() {
-		if (form) navigate(`/preview/${form.id}`)
-	}
-
 	return (
-		<header className="flex h-14 shrink-0 items-center justify-between border-b border-border bg-surface px-6">
-			{/* Back + Form title */}
-			<div className="flex items-center gap-3">
-				<button
-					onClick={() => navigate('/forms')}
-					className="flex h-8 w-8 items-center justify-center rounded-md text-text-muted transition-colors hover:bg-surface-secondary hover:text-text-primary"
-				>
-					<ArrowLeft size={16} />
-				</button>
-				{editing ? (
-					<input
-						ref={inputRef}
-						value={draft}
-						onChange={e => setDraft(e.target.value)}
-						onBlur={commit}
-						onKeyDown={handleKeyDown}
-						className="rounded-md border border-brand bg-surface-secondary px-2 py-1 text-[14px] font-semibold text-text-primary outline-none"
-						style={{ minWidth: 120, width: `${Math.max(draft.length, 10)}ch` }}
-					/>
-				) : (
+		<>
+			<header className="flex h-14 shrink-0 items-center justify-between border-b border-border bg-surface px-6">
+				<div className="flex items-center gap-3">
 					<button
-						onClick={startEditing}
-						className="rounded-md px-2 py-1 text-[14px] font-semibold text-text-primary hover:bg-surface-secondary"
-						title="Click to rename"
+						onClick={() => navigate('/forms')}
+						className="flex h-8 w-8 items-center justify-center rounded-md text-text-muted transition-colors hover:bg-surface-secondary hover:text-text-primary"
 					>
-						{form?.title ?? 'Untitled Form'}
+						<ArrowLeft size={16} />
 					</button>
-				)}
-			</div>
+					{editing ? (
+						<input
+							ref={inputRef}
+							value={draft}
+							onChange={e => setDraft(e.target.value)}
+							onBlur={commit}
+							onKeyDown={handleKeyDown}
+							className="rounded-md border border-brand bg-surface-secondary px-2 py-1 text-[14px] font-semibold text-text-primary outline-none"
+							style={{ minWidth: 120, width: `${Math.max(draft.length, 10)}ch` }}
+						/>
+					) : (
+						<button
+							onClick={startEditing}
+							className="rounded-md px-2 py-1 text-[14px] font-semibold text-text-primary hover:bg-surface-secondary"
+							title="Click to rename"
+						>
+							{form?.title ?? 'Untitled Form'}
+						</button>
+					)}
+				</div>
 
-			<div className="flex items-center gap-2">
-				<IconButton><HelpCircle size={17} /></IconButton>
-				<IconButton><Bell size={17} /></IconButton>
+				<div className="flex items-center gap-2">
+					<IconButton><HelpCircle size={17} /></IconButton>
+					<IconButton><Bell size={17} /></IconButton>
 
-				<div className="mx-2 h-5 w-px bg-border" />
+					<div className="mx-2 h-5 w-px bg-border" />
 
-				<Button variant="outline" size="sm" icon={<Share2 size={14} />} onClick={handlePreview}>
-					Preview
-				</Button>
-				<Button
-					variant="primary"
-					size="sm"
-					onClick={() => form && publishForm(form.id)}
-				>
-					{form?.status === 'published' ? 'Published ✓' : 'Publish'}
-				</Button>
-			</div>
-		</header>
+					<Button
+						variant="outline"
+						size="sm"
+						icon={<Share2 size={14} />}
+						onClick={() => navigate(`/preview/${form?.id}`)}
+					>
+						Preview
+					</Button>
+					<Button
+						variant="outline"
+						size="sm"
+						icon={<Share2 size={14} />}
+						onClick={() => setShareOpen(true)}
+						disabled={form?.status !== 'published'}
+						title={form?.status !== 'published' ? 'Publish the form first to share it' : undefined}
+					>
+						Share
+					</Button>
+					<Button
+						variant="primary"
+						size="sm"
+						onClick={() => form && publishForm(form.id)}
+					>
+						{form?.status === 'published' ? 'Published ✓' : 'Publish'}
+					</Button>
+				</div>
+			</header>
+
+			{shareOpen && form && (
+				<ShareModal
+					formId={form.id}
+					formTitle={form.title}
+					onClose={() => setShareOpen(false)}
+				/>
+			)}
+		</>
 	)
 }

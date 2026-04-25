@@ -76,14 +76,12 @@
 
 ---
 
-## 🔜 Фаза 8 — Sharing і публічні форми
-> Мета: форму можна розповсюджувати за посиланням
-
-- [ ] **Публічний URL** `/f/:formId` — окремий роут без авторизації
-- [ ] **Share modal** у TopBar — копіювання посилання, QR-код
-- [ ] **Embed код** — `<iframe>` snippet для вставки на сайт
-- [ ] **Form branding** — назва і логотип у шапці публічної форми
-- [ ] **Custom slug** — `/f/my-form-name` замість UUID
+## ✅ Фаза 8 — Sharing і публічні форми
+- [x] **Публічний URL** `/f/:formId` — окремий роут без авторизації
+- [x] **Share modal** у TopBar — копіювання посилання + QR-код + embed snippet
+- [x] **Embed код** — `<iframe>` snippet з preview
+- [x] **Form branding** — логотип FormCraft у шапці публічної форми
+- [x] **Backend** — `GET /api/public/forms/:id` без авторизації (тільки published)
 
 ---
 
