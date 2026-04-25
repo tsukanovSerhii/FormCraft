@@ -1,73 +1,111 @@
-# React + TypeScript + Vite
+# FormCraft
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A full-stack form builder with drag & drop, real-time validation, and response tracking.
 
-Currently, two official plugins are available:
+## Tech Stack
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+| Layer    | Technology                                        |
+|----------|---------------------------------------------------|
+| Frontend | React 18, Vite, TypeScript, Tailwind CSS, Zustand |
+| Backend  | Node.js, Express, Prisma ORM                      |
+| Database | PostgreSQL                                        |
+| Auth     | JWT (access + refresh), Google OAuth, GitHub OAuth |
+| Deploy   | Docker + Docker Compose                           |
 
-## React Compiler
+## Project Structure
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```
+FormCraft/
+├── frontend/          # Vite + React app
+├── backend/           # Express API + Prisma
+├── docker-compose.yml
+└── package.json       # npm workspaces root
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## Getting Started
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+### Prerequisites
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+- Node.js 20+
+- PostgreSQL 15+ (or use Docker)
+- Google & GitHub OAuth credentials
+
+### 1. Clone and install
+
+```bash
+git clone https://github.com/your-username/formcraft.git
+cd formcraft
+npm install
+```
+
+### 2. Configure environment
+
+```bash
+cp backend/.env.example backend/.env
+```
+
+Edit `backend/.env` with your database URL and OAuth credentials.
+
+### 3. Run database migrations
+
+```bash
+npm run db:migrate
+```
+
+### 4. Start development servers
+
+```bash
+npm run dev
+```
+
+- Frontend: http://localhost:5173
+- Backend API: http://localhost:3000
+
+## Docker
+
+Start everything (app + database) with a single command:
+
+```bash
+docker compose up --build
+```
+
+The app will be available at http://localhost:5173.
+
+## API Endpoints
+
+### Auth
+| Method | Path                      | Description                |
+|--------|---------------------------|----------------------------|
+| POST   | `/api/auth/register`      | Email + password register  |
+| POST   | `/api/auth/login`         | Email + password login     |
+| POST   | `/api/auth/refresh`       | Refresh access token       |
+| POST   | `/api/auth/logout`        | Clear refresh cookie       |
+| GET    | `/api/auth/me`            | Get current user           |
+| GET    | `/api/auth/google`        | Google OAuth               |
+| GET    | `/api/auth/github`        | GitHub OAuth               |
+
+### Forms
+| Method | Path             | Description      |
+|--------|------------------|------------------|
+| GET    | `/api/forms`     | List user forms  |
+| POST   | `/api/forms`     | Create form      |
+| GET    | `/api/forms/:id` | Get form         |
+| PATCH  | `/api/forms/:id` | Update form      |
+| DELETE | `/api/forms/:id` | Delete form      |
+
+### Responses
+| Method | Path                          | Description                     |
+|--------|-------------------------------|---------------------------------|
+| POST   | `/api/responses/:formId/submit` | Submit a response             |
+| GET    | `/api/responses/:formId`      | Get responses (auth required)   |
+
+## Scripts
+
+```bash
+npm run dev          # Run frontend + backend concurrently
+npm run frontend     # Frontend only
+npm run backend      # Backend only
+npm run build        # Build both for production
+npm run db:migrate   # Run Prisma migrations
+npm run db:studio    # Open Prisma Studio
 ```
