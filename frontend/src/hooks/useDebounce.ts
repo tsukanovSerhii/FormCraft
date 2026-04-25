@@ -1,8 +1,11 @@
-import { useRef } from 'react'
+import { useEffect, useRef } from 'react'
 
-export function useDebounce<T extends (...args: any[]) => any>(fn: T, delay: number): T {
+export function useDebounce<T extends (...args: unknown[]) => unknown>(fn: T, delay: number): T {
   const fnRef = useRef(fn)
-  fnRef.current = fn
+
+  useEffect(() => {
+    fnRef.current = fn
+  })
 
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 

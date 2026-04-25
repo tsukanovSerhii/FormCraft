@@ -1,7 +1,7 @@
 # FormCraft — Roadmap
 
 ## Поточний стан
-Фази 1–6 завершені. Фронтенд підключено до бекенду (Express + Prisma + PostgreSQL). Авторизація через JWT + Google/GitHub OAuth. Монорепо з Docker.
+Фази 1–9 завершені. Фронтенд підключено до бекенду (Express + Prisma + PostgreSQL). Авторизація через JWT + Google/GitHub OAuth. Монорепо з Docker.
 
 ---
 
@@ -95,7 +95,33 @@
 
 ---
 
-## 🔜 Фаза 10 — Notifications і real-time
+## ✅ Фаза 10 — SEO і публічна видимість
+- [x] **`<meta>` теги** — title, description, og:image для кожної публічної форми (`/f/:formId`)
+- [x] **`react-helmet-async`** — динамічний head на основі даних форми
+- [x] **`sitemap.xml`** — backend генерує список опублікованих форм для crawlers (`GET /api/public/sitemap.xml`)
+- [x] **`robots.txt`** — дозволити індексацію `/f/*`, закрити `/builder/*`, `/api/*`
+- [x] **Structured data (JSON-LD)** — schema.org `WebPage` для публічних форм, `WebApplication` для landing
+- [x] **Open Graph / Twitter Card** — превью при шеренні в соцмережах
+- [x] **Canonical URL** — запобігти дублюванню контенту
+- [x] **Landing page** `/` — публічна сторінка-вітрина FormCraft для нових відвідувачів
+
+---
+
+## 🔜 Фаза 11 — Безпека і захист від XSS
+> Мета: захист від XSS-атак через форми і відповіді, hardened HTTP headers
+
+- [ ] **Sanitize form input на backend** — `DOMPurify` або `sanitize-html` для всіх текстових полів у відповідях перед збереженням у БД
+- [ ] **Content Security Policy (CSP)** — заголовок у nginx і Express, заборона inline scripts
+- [ ] **Helmet.js** — додати до Express (`X-Frame-Options`, `X-Content-Type-Options`, `Referrer-Policy`, `Permissions-Policy`)
+- [ ] **Rate limiting** — `express-rate-limit` на `/api/responses/:id/submit` (захист від flood)
+- [ ] **Escaping у FormRenderer** — переконатись що значення полів рендеряться як text, не innerHTML
+- [ ] **Валідація типів полів на backend** — перевіряти що дані відповідають очікуваному типу поля (email → валідний email, number → число)
+- [ ] **CSRF protection** — перевірка Origin header для мутуючих запитів
+- [ ] **Audit залежностей** — `npm audit` у CI, блокувати build при critical вразливостях
+
+---
+
+## 🔜 Фаза 12 — Notifications і real-time
 > Мета: миттєві сповіщення при нових відповідях
 
 - [ ] **Email notification** при новій відповіді (Nodemailer / Resend)
@@ -105,7 +131,7 @@
 
 ---
 
-## 🔜 Фаза 11 — Тести і якість коду
+## 🔜 Фаза 13 — Тести і якість коду
 > Мета: надійність і захист від регресій
 
 - [ ] **Vitest** — unit-тести для store екшенів

@@ -1,6 +1,7 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useEffect, useState } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
+import { Helmet } from 'react-helmet-async'
 import { useParams } from 'react-router-dom'
 import { publicApi } from '@/api/public'
 import { responsesApi } from '@/api/responses'
@@ -8,6 +9,8 @@ import { FormRenderer, SuccessScreen } from '@/components/sections/FormRenderer'
 import { buildValidationSchema } from '@/schemas/fieldSchemas'
 import type { ApiForm } from '@/types/api'
 import type { FormField } from '@/types/form'
+
+const SITE_URL = import.meta.env.VITE_SITE_URL ?? 'https://formcraft.app'
 
 function Logo() {
   return (
@@ -77,8 +80,40 @@ export default function PublicFormPage() {
     )
   }
 
+  const canonicalUrl = `${SITE_URL}/f/${formId}`
+  const pageTitle = `${apiForm.title} — FormCraft`
+  const pageDescription = apiForm.description ?? `Fill out ${apiForm.title} — powered by FormCraft`
+
   return (
     <FormProvider {...methods}>
+      <Helmet>
+        <title>{pageTitle}</title>
+        <meta name="description" content={pageDescription} />
+        <link rel="canonical" href={canonicalUrl} />
+
+        {/* Open Graph */}
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content={canonicalUrl} />
+        <meta property="og:title" content={pageTitle} />
+        <meta property="og:description" content={pageDescription} />
+        <meta property="og:site_name" content="FormCraft" />
+
+        {/* Twitter Card */}
+        <meta name="twitter:card" content="summary" />
+        <meta name="twitter:title" content={pageTitle} />
+        <meta name="twitter:description" content={pageDescription} />
+
+        {/* JSON-LD structured data */}
+        <script type="application/ld+json">{JSON.stringify({
+          '@context': 'https://schema.org',
+          '@type': 'WebPage',
+          name: apiForm.title,
+          description: pageDescription,
+          url: canonicalUrl,
+          publisher: { '@type': 'Organization', name: 'FormCraft', url: SITE_URL },
+        })}</script>
+      </Helmet>
+
       <div className="min-h-screen bg-surface-secondary">
         {/* Branding header */}
         <header className="border-b border-border bg-surface px-6 py-3">
