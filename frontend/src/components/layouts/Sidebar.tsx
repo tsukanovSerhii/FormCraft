@@ -65,20 +65,11 @@ export default function Sidebar() {
 				</Link>
 			</div>
 
-			{/* Workspace block */}
-			<div className="mx-3 mb-3 rounded-lg border border-border bg-surface-secondary p-3">
-				<div className="mb-2.5 flex items-center gap-2.5">
-					<div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md bg-brand text-[13px] font-bold text-white">
-						W
-					</div>
-					<div className="min-w-0">
-						<p className="truncate text-[13px] font-semibold text-text-primary">Workspace</p>
-						<p className="text-[11px] text-text-muted">Pro Plan</p>
-					</div>
-				</div>
+			{/* New Form button */}
+			<div className="mx-3 mb-3">
 				<Link
 					to="/forms"
-					className="flex h-7 w-full items-center justify-center gap-1.5 rounded-md bg-brand text-[12px] font-semibold text-white shadow-button transition-colors hover:bg-brand-dark"
+					className="flex h-8 w-full items-center justify-center gap-1.5 rounded-md bg-brand text-[12px] font-semibold text-white shadow-button transition-colors hover:bg-brand-dark"
 				>
 					<Plus size={13} />
 					New Form

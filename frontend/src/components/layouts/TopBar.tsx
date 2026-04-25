@@ -1,8 +1,10 @@
-import { ArrowLeft, Bell, HelpCircle, Share2 } from 'lucide-react'
+import { ArrowLeft, Bell, BookmarkPlus, Eye, HelpCircle, Share2 } from 'lucide-react'
 import { useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { templatesApi } from '@/api/templates'
 import { Button, IconButton } from '@/components/ui'
 import ShareModal from '@/components/ui/ShareModal'
+import { useToast } from '@/components/ui/Toast'
 import { useActiveForm, useFormBuilderStore } from '@/store/formBuilderStore'
 
 export default function TopBar() {
@@ -12,7 +14,9 @@ export default function TopBar() {
 	const [editing, setEditing] = useState(false)
 	const [draft, setDraft] = useState('')
 	const [shareOpen, setShareOpen] = useState(false)
+	const [saving, setSaving] = useState(false)
 	const inputRef = useRef<HTMLInputElement>(null)
+	const toast = useToast()
 
 	function startEditing() {
 		setDraft(form?.title ?? '')
@@ -28,6 +32,24 @@ export default function TopBar() {
 	function handleKeyDown(e: React.KeyboardEvent) {
 		if (e.key === 'Enter') commit()
 		if (e.key === 'Escape') setEditing(false)
+	}
+
+	async function handleSaveTemplate() {
+		if (!form) return
+		setSaving(true)
+		try {
+			await templatesApi.create({
+				title: form.title,
+				description: form.description,
+				category: 'Custom',
+				fields: form.fields,
+			})
+			toast.success(`"${form.title}" saved as template`)
+		} catch {
+			toast.error('Failed to save template')
+		} finally {
+			setSaving(false)
+		}
 	}
 
 	return (
@@ -70,11 +92,18 @@ export default function TopBar() {
 					<Button
 						variant="outline"
 						size="sm"
-						icon={<Share2 size={14} />}
+						icon={<Eye size={14} />}
 						onClick={() => navigate(`/preview/${form?.id}`)}
 					>
 						Preview
 					</Button>
+					<IconButton
+						onClick={handleSaveTemplate}
+						disabled={saving || !form}
+						title="Save as template"
+					>
+						<BookmarkPlus size={16} />
+					</IconButton>
 					<Button
 						variant="outline"
 						size="sm"
