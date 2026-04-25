@@ -7,18 +7,26 @@ import AuthPage from '@/pages/AuthPage'
 import BuilderPage from '@/pages/BuilderPage'
 import ComingSoonPage from '@/pages/ComingSoonPage'
 import DashboardPage from '@/pages/DashboardPage'
+import LandingPage from '@/pages/LandingPage'
 import NotFoundPage from '@/pages/NotFoundPage'
 import PreviewPage from '@/pages/PreviewPage'
 import PublicFormPage from '@/pages/PublicFormPage'
 import ResponsesPage from '@/pages/ResponsesPage'
 import SettingsPage from '@/pages/SettingsPage'
 import TemplatesPage from '@/pages/TemplatesPage'
+import { useAuthStore } from '@/store/authStore'
+
+function HomeRedirect() {
+  const { accessToken } = useAuthStore()
+  return accessToken ? <Navigate to="/forms" replace /> : <LandingPage />
+}
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
         {/* Public routes */}
+        <Route path="/" element={<HomeRedirect />} />
         <Route path="/login" element={<AuthPage />} />
         <Route path="/auth/callback" element={<AuthCallbackPage />} />
         <Route path="/preview/:formId" element={<PreviewPage />} />
@@ -26,7 +34,6 @@ function App() {
 
         {/* Protected routes */}
         <Route element={<ProtectedRoute />}>
-          <Route path="/" element={<Navigate to="/forms" replace />} />
           <Route path="/forms" element={<DashboardPage />} />
           <Route path="/builder/:formId" element={<BuilderPage />} />
           <Route path="/responses" element={<ResponsesPage />} />

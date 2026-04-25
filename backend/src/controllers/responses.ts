@@ -64,18 +64,18 @@ export async function exportCSV(req: Request, res: Response) {
   }
 
   const allKeys = Array.from(
-    new Set(responses.flatMap(r => Object.keys(r.data as Record<string, unknown>)))
+    new Set(responses.flatMap((r: { data: unknown }) => Object.keys(r.data as Record<string, unknown>)))
   )
 
-  const escape = (v: unknown) => {
-    const s = Array.isArray(v) ? v.join('; ') : String(v ?? '')
+  const escape = (v: unknown): string => {
+    const s = Array.isArray(v) ? (v as unknown[]).join('; ') : String(v ?? '')
     return `"${s.replace(/"/g, '""')}"`
   }
 
   const header = ['id', 'submittedAt', ...allKeys].map(escape).join(',')
-  const rows = responses.map(r => {
+  const rows = responses.map((r: { id: string; submittedAt: Date; data: unknown }) => {
     const data = r.data as Record<string, unknown>
-    return [r.id, r.submittedAt.toISOString(), ...allKeys.map(k => data[k] ?? '')].map(escape).join(',')
+    return [r.id, r.submittedAt.toISOString(), ...allKeys.map(k => data[k as string] ?? '')].map(escape).join(',')
   })
 
   const csv = [header, ...rows].join('\n')
