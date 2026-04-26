@@ -54,7 +54,7 @@ export const useWorkspaceStore = create<WorkspaceState>()(
         }))
       },
     }),
-    { name: 'formcraft-workspace' }
+    { name: 'formcraft-workspace', partialize: (state) => ({ activeWorkspaceId: state.activeWorkspaceId }) }
   )
 )
 

@@ -26,6 +26,7 @@ export default function WorkspaceSettingsPage() {
 
   useEffect(() => {
     if (!workspaceId) return
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setLoadingMembers(true)
     workspacesApi.getMembers(workspaceId)
       .then(setMembers)

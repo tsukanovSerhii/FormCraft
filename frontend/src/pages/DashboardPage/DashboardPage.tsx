@@ -10,6 +10,7 @@ export default function DashboardPage() {
 	const navigate = useNavigate()
 	const { forms, createForm, fetchForms } = useFormBuilderStore()
 
+	// eslint-disable-next-line react-hooks/exhaustive-deps
 	useEffect(() => { fetchForms() }, [])
 
 	async function handleNewForm() {

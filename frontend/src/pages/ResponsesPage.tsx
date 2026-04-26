@@ -26,7 +26,9 @@ export default function ResponsesPage() {
 	const [selected, setSelected] = useState<FormResponse | null>(null)
 	const [exporting, setExporting] = useState(false)
 
+	// eslint-disable-next-line react-hooks/exhaustive-deps
 	useEffect(() => { fetchForms() }, [])
+	// eslint-disable-next-line react-hooks/exhaustive-deps
 	useEffect(() => { forms.forEach(f => fetchResponses(f.id, f.title)) }, [forms.length])
 
 	const filtered = useMemo(() => {

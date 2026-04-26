@@ -21,6 +21,7 @@ export default function AuthCallbackPage() {
       .then(r => r.json())
       .then(user => { setAuth(user, token); navigate('/forms') })
       .catch(() => navigate('/login'))
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   return (

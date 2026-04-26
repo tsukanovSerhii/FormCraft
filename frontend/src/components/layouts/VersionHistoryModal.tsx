@@ -1,4 +1,4 @@
-import { versionsApi, type FormVersion } from '@/api/versions'
+import { type FormVersion } from '@/api/versions'
 
 interface Props {
   formId: string
@@ -44,6 +44,3 @@ export function VersionHistoryModal({ versions, loading, onClose, onRestore }: P
     </div>
   )
 }
-
-export { versionsApi }
-export type { FormVersion }

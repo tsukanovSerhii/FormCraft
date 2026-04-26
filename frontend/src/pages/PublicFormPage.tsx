@@ -1,5 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
 import { Helmet } from 'react-helmet-async'
 import { useParams } from 'react-router-dom'
@@ -34,7 +34,7 @@ export default function PublicFormPage() {
   const [loading, setLoading] = useState(true)
   const [notFound, setNotFound] = useState(false)
   const [submitted, setSubmitted] = useState(false)
-  const mountedAt = useRef(Date.now()).current
+  const [mountedAt] = useState<number>(() => Date.now())
 
   useEffect(() => {
     if (!formId) return

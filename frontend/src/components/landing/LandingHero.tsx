@@ -56,7 +56,7 @@ export function LandingHero({ onCTA }: { onCTA: () => void }) {
             </button>
             <button
               onClick={() => document.querySelector('#how-it-works')?.scrollIntoView({ behavior: 'smooth' })}
-              className="flex items-center gap-2 px-6 py-3 rounded-[12px] text-[15px] font-semibold text-land-text bg-land-bg3 border border-land-border2 transition-all hover:-translate-y-px hover:bg-land-bg2"
+              className="flex items-center gap-2 px-6 py-3 rounded-3 text-[15px] font-semibold text-land-text bg-land-bg3 border border-land-border2 transition-all hover:-translate-y-px hover:bg-land-bg2"
             >
               View demo
             </button>
@@ -80,10 +80,10 @@ export function LandingHero({ onCTA }: { onCTA: () => void }) {
 
         {/* Hero card */}
         <div
-          className="fade-up fu2 relative rounded-[20px] border border-land-border2 overflow-visible bg-land-bg2"
+          className="fade-up fu2 relative rounded-5 border border-land-border2 overflow-visible bg-land-bg2"
           style={{ boxShadow: '0 1px 0 rgba(255,255,255,0.04) inset,0 16px 40px rgba(0,0,0,0.4)' }}
         >
-          <div className="h-1.25 rounded-t-[20px]" style={{ background: 'linear-gradient(90deg,#4e45e2,#6a63ff,#c084fc)' }} />
+          <div className="h-1.25 rounded-t-5" style={{ background: 'linear-gradient(90deg,#4e45e2,#6a63ff,#c084fc)' }} />
           <div className="h-10.5 flex items-center gap-1.75 px-4 border-b border-land-border">
             {['#ff5f57', '#ffbd2e', '#28ca41'].map((c, i) => (
               <div key={i} className="w-2.5 h-2.5 rounded-full" style={{ background: c }} />
@@ -94,7 +94,7 @@ export function LandingHero({ onCTA }: { onCTA: () => void }) {
               </div>
             </div>
           </div>
-          <div className="p-6 pb-7 rounded-b-[20px]">
+          <div className="p-6 pb-7 rounded-b-5">
             <div className="font-bold text-[20px] text-land-text mb-1" style={{ fontFamily: 'Manrope,sans-serif' }}>Customer Feedback</div>
             <div className="text-[13px] text-land-text2 mb-5">Help us improve your experience.</div>
             <div className="grid grid-cols-2 gap-3 mb-3.5">
@@ -140,7 +140,7 @@ export function LandingHero({ onCTA }: { onCTA: () => void }) {
 
           {/* Floating badge — Live */}
           <div
-            className="absolute -top-3.5 -right-3.5 bg-land-bg2 rounded-[12px] px-3.5 py-2 flex items-center gap-2 border border-land-border2"
+            className="absolute -top-3.5 -right-3.5 bg-land-bg2 rounded-3 px-3.5 py-2 flex items-center gap-2 border border-land-border2"
             style={{ boxShadow: '0 8px 24px rgba(0,0,0,.25)' }}
           >
             <div className="w-2 h-2 rounded-full bg-green-500" style={{ boxShadow: '0 0 8px rgba(34,197,94,.6)' }} />
@@ -149,7 +149,7 @@ export function LandingHero({ onCTA }: { onCTA: () => void }) {
 
           {/* Floating badge — Published */}
           <div
-            className="absolute bottom-5 -left-4.5 bg-land-bg2 rounded-[12px] px-3.5 py-2 flex items-center gap-2 border border-land-border2"
+            className="absolute bottom-5 -left-4.5 bg-land-bg2 rounded-3 px-3.5 py-2 flex items-center gap-2 border border-land-border2"
             style={{ boxShadow: '0 8px 24px rgba(0,0,0,.25)' }}
           >
             <ZapIcon />

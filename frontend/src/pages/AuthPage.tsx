@@ -10,9 +10,9 @@ export default function AuthPage() {
   return (
     <div className="flex min-h-screen bg-land-bg">
       {/* Left panel */}
-      <div className="relative hidden lg:flex lg:w-[400px] shrink-0 flex-col justify-between overflow-hidden bg-land-bg3 p-12">
+      <div className="relative hidden lg:flex lg:w-100 shrink-0 flex-col justify-between overflow-hidden bg-land-bg3 p-12">
         <div
-          className="absolute -top-25 -left-25 w-[350px] h-[350px] rounded-full pointer-events-none"
+          className="absolute -top-25 -left-25 w-87.5 h-87.5 rounded-full pointer-events-none"
           style={{ background: 'rgba(106,99,255,.15)', filter: 'blur(70px)' }}
         />
         <div className="relative flex items-center gap-2.5">
@@ -30,7 +30,7 @@ export default function AuthPage() {
             Experience the next generation of data collection.
           </p>
         </div>
-        <div className="relative rounded-[12px] border border-land-border2 bg-[rgba(106,99,255,0.04)] p-5 backdrop-blur-sm">
+        <div className="relative rounded-3 border border-land-border2 bg-[rgba(106,99,255,0.04)] p-5 backdrop-blur-sm">
           <p className="text-[13px] text-land-text2 leading-[1.7] italic mb-3">
             "FormCraft has fundamentally changed how we gather insights."
           </p>
@@ -51,7 +51,7 @@ export default function AuthPage() {
 
       {/* Right panel */}
       <div className="flex flex-1 items-center justify-center px-6 py-12">
-        <div className="w-full max-w-[440px]">
+        <div className="w-full max-w-110">
           <div className="mb-5 hidden lg:flex">
             <Link to="/" className="inline-flex items-center gap-1.5 text-[13px] text-land-text3 hover:text-land-text2 transition-colors">
               <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -75,10 +75,10 @@ export default function AuthPage() {
           </div>
 
           <div
-            className="rounded-[24px] border border-land-border overflow-hidden"
+            className="rounded-6 border border-land-border overflow-hidden"
             style={{ boxShadow: '0 1px 0 rgba(255,255,255,0.04) inset,0 16px 40px rgba(0,0,0,0.4)', background: 'var(--color-land-bg2,#111318)' }}
           >
-            <div className="h-[5px]" style={{ background: 'linear-gradient(90deg,#4e45e2,#6a63ff,#c084fc)' }} />
+            <div className="h-1.25" style={{ background: 'linear-gradient(90deg,#4e45e2,#6a63ff,#c084fc)' }} />
             <div className="p-8 pt-7">
               <div className="flex border-b border-land-border mb-8 gap-0">
                 {(['login', 'register'] as const).map(t => (
