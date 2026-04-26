@@ -4,10 +4,9 @@ import {
 
 interface Props {
   byDay: Record<string, number>
-  days: number
 }
 
-export function SubmissionsChart({ byDay, days }: Props) {
+export function SubmissionsChart({ byDay }: Props) {
   const data = Object.entries(byDay)
     .sort(([a], [b]) => a.localeCompare(b))
     .map(([date, count]) => ({

@@ -149,7 +149,7 @@ export default function AnalyticsPage() {
               <p className="text-[14px] font-semibold text-text-primary">Form Submissions Over Time</p>
               <p className="text-[12px] text-text-muted">Daily aggregation · last {days} days</p>
             </div>
-            <SubmissionsChart byDay={overviewByDay} days={days} />
+            <SubmissionsChart byDay={overviewByDay} />
           </div>
 
           <div className="rounded-lg border border-border bg-surface p-5 shadow-card">

@@ -18,10 +18,13 @@ model User {
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 
+  notifyOnResponse Boolean @default(true)
+
   forms            Form[]
   responses        Response[]
   userTemplates    UserTemplate[]
   workspaceMember  WorkspaceMember[]
+  notifications    Notification[]
 
   @@map("users")
 }
@@ -104,6 +107,21 @@ model Response {
   user   User?   @relation(fields: [userId], references: [id], onDelete: SetNull)
 
   @@map("responses")
+}
+
+model Notification {
+  id        String   @id @default(cuid())
+  type      String
+  title     String
+  body      String
+  read      Boolean  @default(false)
+  meta      Json?
+  createdAt DateTime @default(now())
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("notifications")
 }
 
 model UserTemplate {

@@ -1,10 +1,4 @@
 const DAYS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
-const HOURS = Array.from({ length: 24 }, (_, i) => i)
-
-interface Props {
-  byHour: number[]
-  byDow: number[]
-}
 
 function Cell({ value, max }: { value: number; max: number }) {
   const intensity = max === 0 ? 0 : value / max
