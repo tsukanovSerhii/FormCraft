@@ -1,2 +1,7 @@
 export { default as DonutChart } from './DonutChart'
 export { default as LineChart } from './LineChart'
+export { SubmissionsChart } from './SubmissionsChart'
+export { HourHeatmap, DowHeatmap } from './HeatmapChart'
+export { FieldDistributionChart } from './FieldDistributionChart'
+export { TopFormsTable } from './TopFormsTable'
+export { RecentActivity } from './RecentActivity'
