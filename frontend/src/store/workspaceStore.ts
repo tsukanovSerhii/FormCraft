@@ -4,7 +4,7 @@ import { workspacesApi, type Workspace } from '@/api/workspaces'
 
 interface WorkspaceState {
   workspaces: Workspace[]
-  activeWorkspaceId: string | null  // null = personal (no workspace)
+  activeWorkspaceId: string | null
   loading: boolean
 
   fetch: () => Promise<void>
@@ -16,7 +16,7 @@ interface WorkspaceState {
 
 export const useWorkspaceStore = create<WorkspaceState>()(
   persist(
-    (set, get) => ({
+    (set) => ({
       workspaces: [],
       activeWorkspaceId: null,
       loading: false,
@@ -56,8 +56,8 @@ export const useWorkspaceStore = create<WorkspaceState>()(
     }),
     {
       name: 'formcraft-workspace',
-      partialPersist: (state) => ({ activeWorkspaceId: state.activeWorkspaceId }),
-    } as Parameters<typeof persist>[1]
+      partialize: (state) => ({ activeWorkspaceId: state.activeWorkspaceId }),
+    }
   )
 )
 
