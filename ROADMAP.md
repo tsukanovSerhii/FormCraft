@@ -150,14 +150,14 @@
 
 ---
 
-## 🔜 Фаза 14 — Workspace і командна робота
+## ✅ Фаза 14 — Workspace і командна робота
 > Мета: дати можливість декільком людям працювати над формами разом
 
-- [ ] **Workspace model** — один акаунт = один або більше workspace, форми прив'язані до workspace
-- [ ] **Invite members** — запросити по email, роль: owner / editor / viewer
-- [ ] **Workspace switcher** у Sidebar (dropdown)
-- [ ] **Backend**: таблиці `Workspace`, `WorkspaceMember`, зміна belongsTo форм
-- [ ] **Permissions middleware** — перевіряти роль перед CRUD операціями
+- [x] **Workspace model** — один акаунт = один або більше workspace, форми прив'язані до workspace
+- [x] **Invite members** — запросити по email, роль: owner / editor / viewer
+- [x] **Workspace switcher** у Sidebar (dropdown)
+- [x] **Backend**: таблиці `Workspace`, `WorkspaceMember`, зміна belongsTo форм
+- [x] **Permissions middleware** — перевіряти роль перед CRUD операціями
 
 ---
 

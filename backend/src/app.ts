@@ -9,6 +9,7 @@ import publicRoutes from './routes/public'
 import responseRoutes from './routes/responses'
 import templateRoutes from './routes/templates'
 import versionRoutes from './routes/versions'
+import workspaceRoutes from './routes/workspaces'
 import './services/passport'
 
 const app = express()
@@ -25,6 +26,7 @@ app.use('/api/forms/:formId/versions', versionRoutes)
 app.use('/api/responses', responseRoutes)
 app.use('/api/public', publicRoutes)
 app.use('/api/templates', templateRoutes)
+app.use('/api/workspaces', workspaceRoutes)
 
 app.get('/api/health', (_req, res) => { res.json({ status: 'ok' }) })
 

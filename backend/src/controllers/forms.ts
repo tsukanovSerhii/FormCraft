@@ -11,12 +11,32 @@ const formSchema = z.object({
   status: z.enum(['draft', 'published']).default('draft'),
   expiresAt: z.string().datetime().optional().nullable(),
   maxResponses: z.number().int().positive().optional().nullable(),
+  workspaceId: z.string().optional().nullable(),
 })
 
 export async function getForms(req: Request, res: Response) {
   const userId = (req as AuthRequest).userId
+  const { workspaceId } = req.query
+
+  // If workspaceId given, verify membership then return workspace forms
+  if (workspaceId && typeof workspaceId === 'string') {
+    const member = await prisma.workspaceMember.findUnique({
+      where: { workspaceId_userId: { workspaceId, userId } },
+    })
+    if (!member) {
+      res.status(403).json({ error: 'Not a member of this workspace' })
+      return
+    }
+    const forms = await prisma.form.findMany({
+      where: { workspaceId },
+      orderBy: { updatedAt: 'desc' },
+    })
+    res.json(forms)
+    return
+  }
+
   const forms = await prisma.form.findMany({
-    where: { userId },
+    where: { userId, workspaceId: null },
     orderBy: { updatedAt: 'desc' },
   })
   res.json(forms)

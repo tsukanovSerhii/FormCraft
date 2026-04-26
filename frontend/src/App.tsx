@@ -14,6 +14,7 @@ import PublicFormPage from '@/pages/PublicFormPage'
 import ResponsesPage from '@/pages/ResponsesPage'
 import SettingsPage from '@/pages/SettingsPage'
 import TemplatesPage from '@/pages/TemplatesPage'
+import WorkspaceSettingsPage from '@/pages/WorkspaceSettingsPage'
 import { useAuthStore } from '@/store/authStore'
 
 function HomeRedirect() {
@@ -40,6 +41,7 @@ function App() {
           <Route path="/analytics" element={<AnalyticsPage />} />
           <Route path="/templates" element={<TemplatesPage />} />
           <Route path="/settings" element={<SettingsPage />} />
+          <Route path="/settings/workspace/:workspaceId" element={<WorkspaceSettingsPage />} />
           <Route
             path="/support"
             element={<ComingSoonPage title="Support" description="Our help centre is on its way. Until then, reach us by email." icon={HelpCircle} />}

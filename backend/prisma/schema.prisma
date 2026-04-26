@@ -18,11 +18,42 @@ model User {
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 
-  forms         Form[]
-  responses     Response[]
-  userTemplates UserTemplate[]
+  forms            Form[]
+  responses        Response[]
+  userTemplates    UserTemplate[]
+  workspaceMember  WorkspaceMember[]
 
   @@map("users")
+}
+
+model Workspace {
+  id        String   @id @default(cuid())
+  name      String
+  slug      String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  members WorkspaceMember[]
+  forms   Form[]
+
+  @@map("workspaces")
+}
+
+model WorkspaceMember {
+  id   String @id @default(cuid())
+  role String @default("editor") // owner | editor | viewer
+
+  workspaceId String
+  workspace   Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  invitedAt  DateTime  @default(now())
+  acceptedAt DateTime?
+
+  @@unique([workspaceId, userId])
+  @@map("workspace_members")
 }
 
 model Form {
@@ -38,6 +69,9 @@ model Form {
 
   userId String
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  workspaceId String?
+  workspace   Workspace? @relation(fields: [workspaceId], references: [id], onDelete: SetNull)
 
   responses Response[]
   versions  FormVersion[]

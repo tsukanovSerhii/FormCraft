@@ -74,7 +74,48 @@ html, body {
   transition: background-color 0.2s, color 0.2s;
 }
 
+/* ─── Landing palette (dark default, matches HTML design) ─ */
+@theme {
+  --color-land-bg:      #0c0d11;
+  --color-land-bg2:     #111318;
+  --color-land-bg3:     #1a1c25;
+  --color-land-border:  #ffffff12;
+  --color-land-border2: #ffffff1f;
+  --color-land-text:    #e8e9f0;
+  --color-land-text2:   #7c8096;
+  --color-land-text3:   #4a4e63;
+  --color-land-accent:  #6a63ff;
+  --color-land-accent2: #4e45e2;
+  --color-land-accent3: #8b85ff;
+}
+
 @keyframes marquee {
   from { transform: translateX(0); }
   to   { transform: translateX(-50%); }
 }
+
+@keyframes float1 {
+  0%,100% { transform: translate(0,0) scale(1); }
+  50%     { transform: translate(30px,-40px) scale(1.06); }
+}
+
+@keyframes float2 {
+  0%,100% { transform: translate(0,0); }
+  50%     { transform: translate(-25px,35px) scale(1.04); }
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(28px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes ticker {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+.fade-up  { animation: fadeUp .65s cubic-bezier(.22,1,.36,1) both; }
+.fu1 { animation-delay: .1s; }
+.fu2 { animation-delay: .22s; }
+.fu3 { animation-delay: .34s; }
+.fu4 { animation-delay: .46s; }

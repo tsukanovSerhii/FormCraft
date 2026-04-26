@@ -11,6 +11,7 @@ import {
 import { Link, NavLink, useNavigate } from 'react-router'
 import { authApi } from '@/api/auth'
 import { useAuthStore } from '@/store/authStore'
+import { WorkspaceSwitcher } from '@/components/ui/WorkspaceSwitcher'
 
 const navItems = [
 	{ label: 'Forms', icon: FileText, to: '/forms' },
@@ -64,6 +65,9 @@ export default function Sidebar() {
 					</span>
 				</Link>
 			</div>
+
+			{/* Workspace switcher */}
+			<WorkspaceSwitcher />
 
 			{/* New Form button */}
 			<div className="mx-3 mb-3">
