@@ -4,7 +4,7 @@ import { workspacesApi, type Workspace } from '@/api/workspaces'
 
 interface WorkspaceState {
   workspaces: Workspace[]
-  activeWorkspaceId: string | null  // null = personal (no workspace)
+  activeWorkspaceId: string | null
   loading: boolean
 
   fetch: () => Promise<void>
@@ -16,7 +16,7 @@ interface WorkspaceState {
 
 export const useWorkspaceStore = create<WorkspaceState>()(
   persist(
-    (set, get) => ({
+    (set) => ({
       workspaces: [],
       activeWorkspaceId: null,
       loading: false,
@@ -35,29 +35,26 @@ export const useWorkspaceStore = create<WorkspaceState>()(
 
       addWorkspace: async (name) => {
         const ws = await workspacesApi.create(name)
-        set(s => ({ workspaces: [...s.workspaces, ws], activeWorkspaceId: ws.id }))
+        set((s: WorkspaceState) => ({ workspaces: [...s.workspaces, ws], activeWorkspaceId: ws.id }))
         return ws
       },
 
       removeWorkspace: async (id) => {
         await workspacesApi.delete(id)
-        set(s => ({
-          workspaces: s.workspaces.filter(w => w.id !== id),
+        set((s: WorkspaceState) => ({
+          workspaces: s.workspaces.filter((w: Workspace) => w.id !== id),
           activeWorkspaceId: s.activeWorkspaceId === id ? null : s.activeWorkspaceId,
         }))
       },
 
       renameWorkspace: async (id, name) => {
         const updated = await workspacesApi.update(id, name)
-        set(s => ({
-          workspaces: s.workspaces.map(w => w.id === id ? { ...w, name: updated.name } : w),
+        set((s: WorkspaceState) => ({
+          workspaces: s.workspaces.map((w: Workspace) => w.id === id ? { ...w, name: updated.name } : w),
         }))
       },
     }),
-    {
-      name: 'formcraft-workspace',
-      partialPersist: (state) => ({ activeWorkspaceId: state.activeWorkspaceId }),
-    } as Parameters<typeof persist>[1]
+    { name: 'formcraft-workspace' }
   )
 )
 

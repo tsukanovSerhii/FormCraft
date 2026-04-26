@@ -11,6 +11,7 @@ import templateRoutes from './routes/templates'
 import versionRoutes from './routes/versions'
 import workspaceRoutes from './routes/workspaces'
 import analyticsRoutes from './routes/analytics'
+import notificationRoutes from './routes/notifications'
 import './services/passport'
 
 const app = express()
@@ -29,6 +30,7 @@ app.use('/api/public', publicRoutes)
 app.use('/api/templates', templateRoutes)
 app.use('/api/workspaces', workspaceRoutes)
 app.use('/api/forms', analyticsRoutes)
+app.use('/api/notifications', notificationRoutes)
 
 app.get('/api/health', (_req, res) => { res.json({ status: 'ok' }) })
 
