@@ -20,7 +20,7 @@ export function LandingTestimonials() {
 
         <div className="mt-16 grid grid-cols-2 gap-5">
           {TESTIMONIALS.map(t => (
-            <div key={t.name} className="bg-land-bg rounded-[20px] p-9 border border-land-border transition-colors hover:border-land-border2">
+            <div key={t.name} className="bg-land-bg rounded-5 p-9 border border-land-border transition-colors hover:border-land-border2">
               <div className="flex gap-1 mb-5">
                 {Array.from({ length: t.stars }).map((_, i) => <StarIcon key={i} />)}
               </div>

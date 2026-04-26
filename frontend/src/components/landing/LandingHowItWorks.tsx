@@ -18,14 +18,14 @@ export function LandingHowItWorks() {
           </h2>
         </div>
 
-        <div className="mt-16 grid grid-cols-3 gap-px bg-land-border rounded-[20px] overflow-hidden">
+        <div className="mt-16 grid grid-cols-3 gap-px bg-land-border rounded-5 overflow-hidden">
           {STEPS.map((s, i) => (
             <div
               key={s.n}
               className={[
                 'group bg-land-bg2 px-10 py-12 relative',
-                i === 0 ? 'rounded-l-[20px]' : '',
-                i === STEPS.length - 1 ? 'rounded-r-[20px]' : '',
+                i === 0 ? 'rounded-l-5' : '',
+                i === STEPS.length - 1 ? 'rounded-r-5' : '',
               ].join(' ')}
             >
               <div

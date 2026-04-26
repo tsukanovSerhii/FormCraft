@@ -42,7 +42,7 @@ function BentoDesc({ children }: { children: string }) {
   return <div className="text-[14px] text-land-text2 leading-[1.65]">{children}</div>
 }
 
-const card = 'bg-land-bg2 rounded-[20px] border border-land-border p-8 transition-all duration-200 hover:border-land-border2 hover:-translate-y-0.5'
+const card = 'bg-land-bg2 rounded-5 border border-land-border p-8 transition-all duration-200 hover:border-land-border2 hover:-translate-y-0.5'
 
 export function LandingFeatures() {
   return (
@@ -61,7 +61,7 @@ export function LandingFeatures() {
             <BentoIcon><DragIcon /></BentoIcon>
             <BentoTitle>Drag & drop builder</BentoTitle>
             <BentoDesc>11 field types. Reorder in seconds. Set labels, validation and conditional logic — all inline. No code, ever.</BentoDesc>
-            <div className="mt-6 bg-land-bg3 rounded-[12px] p-4 flex gap-2 flex-wrap">
+            <div className="mt-6 bg-land-bg3 rounded-3 p-4 flex gap-2 flex-wrap">
               {FIELD_TAGS.map(f => (
                 <div key={f} className="px-3 py-1.5 bg-land-bg2 rounded-lg text-[12px] font-semibold text-land-text2 border border-land-border whitespace-nowrap">
                   {f}
