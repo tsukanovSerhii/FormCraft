@@ -8,22 +8,39 @@ datasource db {
 }
 
 model User {
-  id           String   @id @default(cuid())
-  email        String   @unique
-  name         String
-  avatarUrl    String?
-  passwordHash String?
-  googleId     String?  @unique
-  githubId     String?  @unique
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+  id                String   @id @default(cuid())
+  email             String   @unique
+  name              String
+  avatarUrl         String?
+  passwordHash      String?
+  googleId          String?  @unique
+  githubId          String?  @unique
+  notifyOnResponse  Boolean  @default(true)
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
 
   forms            Form[]
   responses        Response[]
   userTemplates    UserTemplate[]
   workspaceMember  WorkspaceMember[]
+  notifications    Notification[]
 
   @@map("users")
+}
+
+model Notification {
+  id        String   @id @default(cuid())
+  type      String   // "new_response"
+  title     String
+  body      String
+  read      Boolean  @default(false)
+  meta      Json?    // { formId, formTitle, responseId }
+  createdAt DateTime @default(now())
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("notifications")
 }
 
 model Workspace {

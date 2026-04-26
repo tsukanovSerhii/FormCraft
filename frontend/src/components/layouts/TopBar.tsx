@@ -1,4 +1,5 @@
-import { ArrowLeft, Bell, BookmarkPlus, Eye, HelpCircle, History, Settings2, Share2 } from 'lucide-react'
+import { ArrowLeft, BookmarkPlus, Eye, HelpCircle, History, Settings2, Share2 } from 'lucide-react'
+import { NotificationCenter } from '@/components/ui/NotificationCenter'
 import { useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { templatesApi } from '@/api/templates'
@@ -116,7 +117,7 @@ export default function TopBar() {
 
 				<div className="flex items-center gap-2">
 					<IconButton><HelpCircle size={17} /></IconButton>
-					<IconButton><Bell size={17} /></IconButton>
+					<NotificationCenter />
 					<IconButton onClick={openHistory} title="Version history" disabled={!form}>
 						<History size={16} />
 					</IconButton>

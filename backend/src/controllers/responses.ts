@@ -4,6 +4,7 @@ import type { AuthRequest } from '../middleware/auth'
 import prisma from '../utils/prisma'
 import { sanitizeResponseData } from '../utils/sanitize'
 import { sendNewResponseEmail } from '../services/email'
+import { pushToUser } from './notifications'
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
@@ -57,10 +58,24 @@ export async function submitResponse(req: Request, res: Response) {
     data: { formId, userId: userId ?? null, data: sanitized as Prisma.InputJsonObject },
   })
 
-  // Fire-and-forget email to form owner
-  prisma.user.findUnique({ where: { id: form.userId }, select: { email: true } })
-    .then(owner => {
-      if (owner) {
+  // Fire-and-forget: create notification + push SSE + send email
+  prisma.user.findUnique({ where: { id: form.userId }, select: { id: true, email: true, notifyOnResponse: true } })
+    .then(async owner => {
+      if (!owner) return
+      // Create in-app notification
+      const notification = await prisma.notification.create({
+        data: {
+          userId: owner.id,
+          type: 'new_response',
+          title: 'New response',
+          body: `Someone submitted "${form.title}"`,
+          meta: { formId, formTitle: form.title, responseId: response.id },
+        },
+      })
+      // Push to SSE clients
+      pushToUser(owner.id, { type: 'notification', notification })
+      // Email if enabled
+      if (owner.notifyOnResponse) {
         sendNewResponseEmail({
           to: owner.email,
           formTitle: form.title,

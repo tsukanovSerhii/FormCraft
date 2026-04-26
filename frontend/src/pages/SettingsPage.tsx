@@ -1,23 +1,24 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { authApi } from '@/api/auth'
+import { notificationsApi } from '@/api/notifications'
 import { AppLayout } from '@/components/layouts'
 import { useAuthStore } from '@/store/authStore'
 
-type Tab = 'profile' | 'security'
+type Tab = 'profile' | 'security' | 'notifications'
 
-function Avatar({ name, avatarUrl, size = 'lg' }: { name: string; avatarUrl?: string | null; size?: 'sm' | 'lg' }) {
+function Avatar({ name, avatarUrl }: { name: string; avatarUrl?: string | null }) {
   const initials = name.split(' ').map(p => p[0]).join('').toUpperCase().slice(0, 2)
-  const cls = size === 'lg'
-    ? 'h-16 w-16 text-xl'
-    : 'h-9 w-9 text-sm'
-  if (avatarUrl) return <img src={avatarUrl} alt={name} className={`${cls} rounded-full object-cover`} />
+  if (avatarUrl) return <img src={avatarUrl} alt={name} className="h-12 w-12 rounded-full object-cover" />
   return (
-    <div className={`${cls} flex shrink-0 items-center justify-center rounded-full bg-brand font-bold text-white`}>
+    <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-brand text-[15px] font-bold text-white">
       {initials}
     </div>
   )
 }
+
+const inputCls = 'h-9 w-full rounded-lg border border-border bg-surface px-3 text-[13px] text-text-primary outline-none transition focus:border-brand focus:ring-2 focus:ring-brand/20'
+const labelCls = 'block mb-1.5 text-[12px] font-medium text-text-secondary'
 
 function ProfileTab() {
   const { user, setAuth } = useAuthStore()
@@ -29,14 +30,11 @@ function ProfileTab() {
   async function handleSave(e: React.FormEvent) {
     e.preventDefault()
     if (!name.trim() || name.trim() === user?.name) return
-    setSaving(true)
-    setMsg('')
-    setError('')
+    setSaving(true); setMsg(''); setError('')
     try {
       const updated = await authApi.updateProfile(name.trim())
-      const token = useAuthStore.getState().accessToken!
-      setAuth(updated, token)
-      setMsg('Profile updated.')
+      setAuth(updated, useAuthStore.getState().accessToken!)
+      setMsg('Saved.')
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Something went wrong')
     } finally {
@@ -45,56 +43,43 @@ function ProfileTab() {
   }
 
   return (
-    <div className="max-w-lg">
-      <h2 className="mb-1 text-base font-semibold text-text-primary">Profile</h2>
-      <p className="mb-6 text-sm text-text-muted">Manage your name and account identity.</p>
-
-      <div className="mb-6 flex items-center gap-4">
-        <Avatar name={user?.name ?? ''} avatarUrl={user?.avatarUrl} size="lg" />
+    <div className="max-w-md">
+      <div className="mb-7 flex items-center gap-4">
+        <Avatar name={user?.name ?? ''} avatarUrl={user?.avatarUrl} />
         <div>
-          <p className="text-sm font-medium text-text-primary">{user?.name}</p>
-          <p className="text-xs text-text-muted">{user?.email}</p>
+          <p className="text-[14px] font-semibold text-text-primary">{user?.name}</p>
+          <p className="text-[12px] text-text-muted">{user?.email}</p>
         </div>
       </div>
 
-      <form onSubmit={handleSave} className="flex flex-col gap-4">
-        <div className="flex flex-col gap-1.5">
-          <label className="text-xs font-medium text-text-secondary">Display name</label>
-          <input
-            value={name}
-            onChange={e => setName(e.target.value)}
-            className="h-9 rounded-lg border border-border bg-surface px-3 text-sm text-text-primary outline-none ring-offset-0 transition focus:border-brand focus:ring-2 focus:ring-brand/20"
-          />
-        </div>
-        <div className="flex flex-col gap-1.5">
-          <label className="text-xs font-medium text-text-secondary">Email</label>
-          <input
-            value={user?.email ?? ''}
-            disabled
-            className="h-9 rounded-lg border border-border bg-surface-secondary px-3 text-sm text-text-muted outline-none"
-          />
-          <p className="text-xs text-text-muted">Email cannot be changed.</p>
-        </div>
-
-        {msg && <p className="text-sm text-green-600">{msg}</p>}
-        {error && <p className="text-sm text-red-500">{error}</p>}
-
+      <form onSubmit={handleSave} className="space-y-4">
         <div>
-          <button
-            type="submit"
-            disabled={saving || !name.trim() || name.trim() === user?.name}
-            className="h-9 rounded-lg bg-brand px-4 text-sm font-semibold text-white transition hover:bg-brand-dark disabled:opacity-40"
-          >
-            {saving ? 'Saving…' : 'Save changes'}
-          </button>
+          <label className={labelCls}>Display name</label>
+          <input value={name} onChange={e => setName(e.target.value)} className={inputCls} />
         </div>
+        <div>
+          <label className={labelCls}>Email</label>
+          <input value={user?.email ?? ''} disabled className={`${inputCls} bg-surface-secondary text-text-muted`} />
+          <p className="mt-1 text-[11px] text-text-muted">Email cannot be changed.</p>
+        </div>
+
+        {msg && <p className="text-[13px] text-success">{msg}</p>}
+        {error && <p className="text-[13px] text-danger">{error}</p>}
+
+        <button
+          type="submit"
+          disabled={saving || !name.trim() || name.trim() === user?.name}
+          className="rounded-lg bg-brand px-4 py-2 text-[13px] font-semibold text-white transition hover:bg-brand-dark disabled:opacity-40"
+        >
+          {saving ? 'Saving…' : 'Save changes'}
+        </button>
       </form>
     </div>
   )
 }
 
 function SecurityTab() {
-  const { user, clearAuth } = useAuthStore()
+  const { clearAuth } = useAuthStore()
   const navigate = useNavigate()
   const [current, setCurrent] = useState('')
   const [next, setNext] = useState('')
@@ -105,18 +90,14 @@ function SecurityTab() {
   const [deleteConfirm, setDeleteConfirm] = useState(false)
   const [deleting, setDeleting] = useState(false)
 
-  const isOAuth = !user?.email // won't happen, but guard
-  // Detect if user likely has no password (OAuth only) — we show a note but still render form
-  // The backend will return 400 if no password set
-
   async function handlePassword(e: React.FormEvent) {
     e.preventDefault()
     if (next !== confirm) { setError('Passwords do not match.'); return }
-    if (next.length < 8) { setError('New password must be at least 8 characters.'); return }
+    if (next.length < 8) { setError('Minimum 8 characters.'); return }
     setSaving(true); setMsg(''); setError('')
     try {
       await authApi.changePassword(current, next)
-      setMsg('Password changed successfully.')
+      setMsg('Password updated.')
       setCurrent(''); setNext(''); setConfirm('')
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Something went wrong')
@@ -138,55 +119,41 @@ function SecurityTab() {
   }
 
   return (
-    <div className="max-w-lg space-y-10">
-      {/* Change password */}
+    <div className="max-w-md space-y-10">
       <div>
-        <h2 className="mb-1 text-base font-semibold text-text-primary">Change password</h2>
-        <p className="mb-6 text-sm text-text-muted">
-          {isOAuth
-            ? 'Your account uses OAuth login — set a password to also enable email login.'
-            : 'Update your password. You will need your current password.'}
-        </p>
-        <form onSubmit={handlePassword} className="flex flex-col gap-4">
-          {['Current password', 'New password', 'Confirm new password'].map((label, i) => {
-            const vals = [current, next, confirm]
-            const setters = [setCurrent, setNext, setConfirm]
-            return (
-              <div key={label} className="flex flex-col gap-1.5">
-                <label className="text-xs font-medium text-text-secondary">{label}</label>
-                <input
-                  type="password"
-                  value={vals[i]}
-                  onChange={e => setters[i](e.target.value)}
-                  className="h-9 rounded-lg border border-border bg-surface px-3 text-sm text-text-primary outline-none transition focus:border-brand focus:ring-2 focus:ring-brand/20"
-                />
-              </div>
-            )
-          })}
-          {msg && <p className="text-sm text-green-600">{msg}</p>}
-          {error && <p className="text-sm text-red-500">{error}</p>}
-          <div>
-            <button
-              type="submit"
-              disabled={saving || !current || !next || !confirm}
-              className="h-9 rounded-lg bg-brand px-4 text-sm font-semibold text-white transition hover:bg-brand-dark disabled:opacity-40"
-            >
-              {saving ? 'Updating…' : 'Update password'}
-            </button>
-          </div>
+        <p className="mb-5 text-[13px] font-semibold text-text-primary">Change password</p>
+        <form onSubmit={handlePassword} className="space-y-4">
+          {[
+            { label: 'Current password', val: current, set: setCurrent },
+            { label: 'New password', val: next, set: setNext },
+            { label: 'Confirm new password', val: confirm, set: setConfirm },
+          ].map(({ label, val, set }) => (
+            <div key={label}>
+              <label className={labelCls}>{label}</label>
+              <input type="password" value={val} onChange={e => set(e.target.value)} className={inputCls} />
+            </div>
+          ))}
+          {msg && <p className="text-[13px] text-success">{msg}</p>}
+          {error && <p className="text-[13px] text-danger">{error}</p>}
+          <button
+            type="submit"
+            disabled={saving || !current || !next || !confirm}
+            className="rounded-lg bg-brand px-4 py-2 text-[13px] font-semibold text-white transition hover:bg-brand-dark disabled:opacity-40"
+          >
+            {saving ? 'Updating…' : 'Update password'}
+          </button>
         </form>
       </div>
 
-      {/* Danger zone */}
-      <div className="rounded-xl border border-red-200 bg-red-50/50 p-5">
-        <h3 className="mb-1 text-sm font-semibold text-red-700">Delete account</h3>
-        <p className="mb-4 text-sm text-red-600">
-          This permanently deletes your account, all forms, and responses. This action cannot be undone.
+      <div className="rounded-xl border border-danger/20 bg-danger-light p-5">
+        <p className="mb-1 text-[13px] font-semibold text-danger">Delete account</p>
+        <p className="mb-4 text-[12px] text-text-muted">
+          Permanently deletes your account, all forms, and responses. Cannot be undone.
         </p>
         {!deleteConfirm ? (
           <button
             onClick={() => setDeleteConfirm(true)}
-            className="h-9 rounded-lg border border-red-300 bg-white px-4 text-sm font-semibold text-red-600 transition hover:bg-red-50"
+            className="rounded-lg border border-danger/30 px-4 py-2 text-[13px] font-semibold text-danger transition hover:bg-danger/10"
           >
             Delete my account
           </button>
@@ -195,14 +162,11 @@ function SecurityTab() {
             <button
               onClick={handleDelete}
               disabled={deleting}
-              className="h-9 rounded-lg bg-red-600 px-4 text-sm font-semibold text-white transition hover:bg-red-700 disabled:opacity-40"
+              className="rounded-lg bg-danger px-4 py-2 text-[13px] font-semibold text-white transition hover:opacity-90 disabled:opacity-40"
             >
               {deleting ? 'Deleting…' : 'Yes, delete permanently'}
             </button>
-            <button
-              onClick={() => setDeleteConfirm(false)}
-              className="text-sm text-text-muted hover:text-text-primary"
-            >
+            <button onClick={() => setDeleteConfirm(false)} className="text-[13px] text-text-muted hover:text-text-primary">
               Cancel
             </button>
           </div>
@@ -212,40 +176,92 @@ function SecurityTab() {
   )
 }
 
+function NotificationsTab() {
+  const [notifyOnResponse, setNotifyOnResponse] = useState(true)
+  const [loading, setLoading] = useState(true)
+  const [saving, setSaving] = useState(false)
+  const [msg, setMsg] = useState('')
+
+  useEffect(() => {
+    notificationsApi.getPreferences().then(p => {
+      setNotifyOnResponse(p.notifyOnResponse)
+      setLoading(false)
+    }).catch(() => setLoading(false))
+  }, [])
+
+  async function handleToggle() {
+    const next = !notifyOnResponse
+    setNotifyOnResponse(next)
+    setSaving(true)
+    setMsg('')
+    try {
+      await notificationsApi.updatePreferences({ notifyOnResponse: next })
+      setMsg('Saved.')
+    } catch {
+      setNotifyOnResponse(!next)
+    } finally {
+      setSaving(false)
+    }
+  }
+
+  if (loading) return <div className="h-6 w-6 animate-spin rounded-full border-2 border-brand border-t-transparent" />
+
+  return (
+    <div className="max-w-md space-y-6">
+      <div className="flex items-center justify-between rounded-xl border border-border bg-surface p-4">
+        <div>
+          <p className="text-[13px] font-medium text-text-primary">Email on new response</p>
+          <p className="mt-0.5 text-[12px] text-text-muted">Receive an email each time someone submits your form.</p>
+        </div>
+        <button
+          onClick={handleToggle}
+          disabled={saving}
+          className={[
+            'relative h-6 w-11 rounded-full transition-colors',
+            notifyOnResponse ? 'bg-brand' : 'bg-surface-tertiary',
+          ].join(' ')}
+        >
+          <span className={[
+            'absolute top-0.5 h-5 w-5 rounded-full bg-white shadow transition-transform',
+            notifyOnResponse ? 'translate-x-5' : 'translate-x-0.5',
+          ].join(' ')} />
+        </button>
+      </div>
+      {msg && <p className="text-[13px] text-success">{msg}</p>}
+    </div>
+  )
+}
+
 export default function SettingsPage() {
   const [tab, setTab] = useState<Tab>('profile')
-
-  const tabs: { id: Tab; label: string }[] = [
-    { id: 'profile', label: 'Profile' },
-    { id: 'security', label: 'Security' },
-  ]
 
   return (
     <AppLayout>
       <div className="flex flex-1 flex-col overflow-auto">
-        <div className="border-b border-border px-8 pt-8">
-          <h1 className="mb-4 text-xl font-bold text-text-primary">Settings</h1>
-          <div className="flex gap-1">
-            {tabs.map(t => (
+        <div className="border-b border-border px-8 pt-7">
+          <h1 className="mb-4 text-[17px] font-semibold text-text-primary">Settings</h1>
+          <div className="flex gap-0.5">
+            {(['profile', 'security', 'notifications'] as Tab[]).map(t => (
               <button
-                key={t.id}
-                onClick={() => setTab(t.id)}
+                key={t}
+                onClick={() => setTab(t)}
                 className={[
-                  'relative px-4 py-2 text-sm font-medium transition-colors',
-                  tab === t.id
+                  'relative px-4 py-2 text-[13px] font-medium capitalize transition-colors',
+                  tab === t
                     ? 'text-brand after:absolute after:inset-x-0 after:-bottom-px after:h-0.5 after:rounded-full after:bg-brand'
                     : 'text-text-secondary hover:text-text-primary',
                 ].join(' ')}
               >
-                {t.label}
+                {t}
               </button>
             ))}
           </div>
         </div>
 
-        <div className="flex-1 overflow-auto px-8 py-8">
+        <div className="flex-1 overflow-auto px-8 py-7">
           {tab === 'profile' && <ProfileTab />}
           {tab === 'security' && <SecurityTab />}
+          {tab === 'notifications' && <NotificationsTab />}
         </div>
       </div>
     </AppLayout>
