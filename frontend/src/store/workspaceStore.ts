@@ -35,22 +35,22 @@ export const useWorkspaceStore = create<WorkspaceState>()(
 
       addWorkspace: async (name) => {
         const ws = await workspacesApi.create(name)
-        set(s => ({ workspaces: [...s.workspaces, ws], activeWorkspaceId: ws.id }))
+        set((s: WorkspaceState) => ({ workspaces: [...s.workspaces, ws], activeWorkspaceId: ws.id }))
         return ws
       },
 
       removeWorkspace: async (id) => {
         await workspacesApi.delete(id)
-        set(s => ({
-          workspaces: s.workspaces.filter(w => w.id !== id),
+        set((s: WorkspaceState) => ({
+          workspaces: s.workspaces.filter((w: Workspace) => w.id !== id),
           activeWorkspaceId: s.activeWorkspaceId === id ? null : s.activeWorkspaceId,
         }))
       },
 
       renameWorkspace: async (id, name) => {
         const updated = await workspacesApi.update(id, name)
-        set(s => ({
-          workspaces: s.workspaces.map(w => w.id === id ? { ...w, name: updated.name } : w),
+        set((s: WorkspaceState) => ({
+          workspaces: s.workspaces.map((w: Workspace) => w.id === id ? { ...w, name: updated.name } : w),
         }))
       },
     }),

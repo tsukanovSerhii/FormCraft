@@ -42,7 +42,7 @@ export function FieldDistributionChart({ field }: Props) {
             ))}
           </Pie>
           <Tooltip
-            formatter={(v: number) => [`${v} (${Math.round(v / total * 100)}%)`, 'Responses']}
+            formatter={(v) => [`${v} (${Math.round(Number(v) / total * 100)}%)`, 'Responses']}
             contentStyle={{ fontSize: 12 }}
           />
           <Legend iconSize={10} iconType="circle" wrapperStyle={{ fontSize: 12 }} />

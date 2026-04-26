@@ -1,4 +1,4 @@
-import { ArrowLeft, Bell, BookmarkPlus, Eye, HelpCircle, History, Settings2, Share2 } from 'lucide-react'
+import { ArrowLeft, BookmarkPlus, Eye, HelpCircle, History, Settings2, Share2 } from 'lucide-react'
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { templatesApi } from '@/api/templates'
@@ -6,6 +6,7 @@ import { versionsApi, type FormVersion } from '@/api/versions'
 import { Button, IconButton } from '@/components/ui'
 import ShareModal from '@/components/ui/ShareModal'
 import { useToast } from '@/components/ui/useToast'
+import { NotificationCenter } from '@/components/ui/NotificationCenter'
 import { useActiveForm } from '@/store/formBuilderStore'
 import { TitleEditor } from './TitleEditor'
 import { FormSettingsModal } from './FormSettingsModal'
@@ -86,7 +87,7 @@ export default function TopBar() {
 
 				<div className="flex items-center gap-2">
 					<IconButton><HelpCircle size={17} /></IconButton>
-					<IconButton><Bell size={17} /></IconButton>
+					<NotificationCenter />
 					<IconButton onClick={openHistory} title="Version history" disabled={!form}>
 						<History size={16} />
 					</IconButton>
