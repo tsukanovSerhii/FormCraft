@@ -1,4 +1,4 @@
-import { FileText, Plus } from 'lucide-react'
+import { Plus } from 'lucide-react'
 
 interface EmptyStateProps {
 	onNew: () => void
@@ -6,20 +6,24 @@ interface EmptyStateProps {
 
 export default function EmptyState({ onNew }: EmptyStateProps) {
 	return (
-		<div className="flex flex-col items-center justify-center rounded-xl border-2 border-dashed border-border bg-surface py-20">
-			<div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-brand-muted text-brand">
-				<FileText size={28} />
+		<div className="flex flex-col items-center justify-center py-24 text-center">
+			<div className="mb-5 flex h-12 w-12 items-center justify-center rounded-xl bg-brand-muted">
+				<svg width="20" height="20" viewBox="0 0 16 16" fill="none">
+					<rect x="2" y="2" width="12" height="2" rx="1" fill="#6c63ff" />
+					<rect x="2" y="6" width="8" height="2" rx="1" fill="#6c63ff" fillOpacity="0.5" />
+					<rect x="2" y="10" width="10" height="2" rx="1" fill="#6c63ff" fillOpacity="0.5" />
+				</svg>
 			</div>
-			<p className="mt-5 text-[17px] font-bold text-text-primary">No forms yet</p>
-			<p className="mt-1.5 max-w-xs text-center text-[13px] text-text-muted">
-				Create your first form to start collecting responses from your audience.
+			<p className="text-[15px] font-semibold text-text-primary">No forms yet</p>
+			<p className="mt-1.5 max-w-60 text-[13px] text-text-muted">
+				Create your first form and start collecting responses.
 			</p>
 			<button
 				onClick={onNew}
-				className="mt-6 flex items-center gap-1.5 rounded-lg bg-brand px-5 py-2.5 text-[13px] font-semibold text-white shadow-button transition-colors hover:bg-brand-dark"
+				className="mt-6 flex items-center gap-1.5 rounded-md bg-brand px-4 py-2 text-[13px] font-semibold text-white transition-colors hover:bg-brand-dark"
 			>
-				<Plus size={14} />
-				Create your first form
+				<Plus size={13} />
+				New form
 			</button>
 		</div>
 	)
