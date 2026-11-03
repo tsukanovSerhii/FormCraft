@@ -48,7 +48,7 @@ export default function MultipleChoiceField({
 							<span
 								className={[
 									'text-[14px] transition-colors',
-									isSelected ? 'font-medium text-brand' : 'text-text-secondary'
+									isSelected ? 'font-medium text-brand-text' : 'text-text-secondary'
 								].join(' ')}
 							>
 								{option}

@@ -14,7 +14,7 @@ export const TOP_FORMS = [
 ]
 
 export const RECENT_ACTIVITY = [
-	{ name: 'Alex Rivera', action: 'submitted "Customer Survey"', time: '4 minutes ago', initials: 'AR', color: 'bg-brand-muted text-brand' },
+	{ name: 'Alex Rivera', action: 'submitted "Customer Survey"', time: '4 minutes ago', initials: 'AR', color: 'bg-brand-muted text-brand-text' },
 	{ name: 'Sam Chen', action: 'submitted "Job Application"', time: '18 minutes ago', initials: 'SC', color: 'bg-success-light text-success' },
 	{ name: 'Mia Torres', action: 'submitted "Feedback Form"', time: '34 minutes ago', initials: 'MT', color: 'bg-danger-light text-danger' },
 ]

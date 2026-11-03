@@ -3,7 +3,7 @@ import { useState } from 'react'
 import type { WorkspaceMember } from '@/api/workspaces'
 
 const ROLE_ICON: Record<string, React.ReactNode> = {
-  owner:  <Crown size={12} className="text-brand" />,
+  owner:  <Crown size={12} className="text-brand-text" />,
   editor: <Edit2 size={12} className="text-text-muted" />,
   viewer: <Shield size={12} className="text-text-muted" />,
 }

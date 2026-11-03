@@ -12,7 +12,7 @@ export default function StarRating({ score, max = 5 }: StarRatingProps) {
 				<Star
 					key={i}
 					size={13}
-					className={i <= score ? 'fill-[#ffa502] text-[#ffa502]' : 'fill-border text-border'}
+					className={i <= score ? 'fill-star text-star' : 'fill-border text-border'}
 				/>
 			))}
 			<span className="ml-1 text-[13px] font-medium text-text-secondary">{score}.0</span>

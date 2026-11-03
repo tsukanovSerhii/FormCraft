@@ -12,7 +12,7 @@ export default function ComingSoonPage({ title, description, icon: Icon = Constr
 	return (
 		<AppLayout>
 			<div className="flex flex-1 flex-col items-center justify-center px-8 py-24">
-				<div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-brand-muted text-brand">
+				<div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-brand-muted text-brand-text">
 					<Icon size={28} />
 				</div>
 				<h1 className="mt-5 text-[22px] font-bold text-text-primary">{title}</h1>

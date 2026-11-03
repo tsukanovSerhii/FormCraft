@@ -7,7 +7,7 @@ interface EmptyStateProps {
 export default function EmptyState({ onAdd }: EmptyStateProps) {
 	return (
 		<div className="flex flex-col items-center justify-center rounded-lg border-2 border-dashed border-border bg-surface py-16">
-			<div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-brand-muted text-brand">
+			<div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-brand-muted text-brand-text">
 				<LayoutList size={24} />
 			</div>
 			<p className="mt-4 text-[15px] font-semibold text-text-primary">No fields yet</p>

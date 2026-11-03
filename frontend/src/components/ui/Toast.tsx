@@ -37,13 +37,13 @@ export function ToastProvider({ children }: { children: ReactNode }) {
               'flex items-center gap-3 rounded-xl border px-4 py-3 shadow-lg transition-all',
               'animate-in slide-in-from-bottom-2 duration-200',
               t.type === 'success'
-                ? 'border-green-200 bg-white text-green-800'
-                : 'border-red-200 bg-white text-red-700',
+                ? 'border-success/30 bg-surface text-text-primary'
+                : 'border-danger/30 bg-surface text-text-primary',
             ].join(' ')}
           >
             {t.type === 'success'
-              ? <CheckCircle size={16} className="shrink-0 text-green-500" />
-              : <XCircle size={16} className="shrink-0 text-red-500" />}
+              ? <CheckCircle size={16} className="shrink-0 text-success" />
+              : <XCircle size={16} className="shrink-0 text-danger" />}
             <span className="text-[13px] font-medium">{t.message}</span>
             <button onClick={() => remove(t.id)} className="ml-1 text-current opacity-40 hover:opacity-70">
               <X size={13} />

@@ -41,7 +41,7 @@ function CopyField({ value, label }: { value: string; label: string }) {
           onClick={copy}
           className="flex shrink-0 items-center gap-1 rounded-md px-2 py-1 text-xs font-medium text-text-muted transition-colors hover:bg-surface hover:text-text-primary"
         >
-          {copied ? <Check size={12} className="text-green-500" /> : <Copy size={12} />}
+          {copied ? <Check size={12} className="text-success" /> : <Copy size={12} />}
           {copied ? 'Copied' : 'Copy'}
         </button>
       </div>
@@ -95,7 +95,7 @@ export default function ShareModal({ formId, formTitle, onClose }: ShareModalPro
               className={[
                 'relative flex items-center gap-1.5 px-3 py-3 text-sm font-medium transition-colors',
                 tab === id
-                  ? 'text-brand after:absolute after:inset-x-0 after:bottom-0 after:h-0.5 after:bg-brand'
+                  ? 'text-brand-text after:absolute after:inset-x-0 after:bottom-0 after:h-0.5 after:bg-brand'
                   : 'text-text-secondary hover:text-text-primary',
               ].join(' ')}
             >

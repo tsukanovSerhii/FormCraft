@@ -121,7 +121,7 @@ export default function ResponsesPage() {
 
 				{filtered.length === 0 ? (
 					<div className="flex flex-col items-center justify-center rounded-xl border-2 border-dashed border-border bg-surface py-20">
-						<div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-brand-muted text-brand">
+						<div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-brand-muted text-brand-text">
 							<Inbox size={24} />
 						</div>
 						<p className="mt-4 text-[15px] font-semibold text-text-primary">

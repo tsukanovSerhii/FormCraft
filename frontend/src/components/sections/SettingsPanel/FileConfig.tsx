@@ -28,7 +28,7 @@ export default function FileConfig() {
 						className={[
 							'rounded-md border px-2.5 py-1 text-[12px] font-medium transition-colors',
 							selected.has(type)
-								? 'border-brand bg-brand-muted text-brand'
+								? 'border-brand bg-brand-muted text-brand-text'
 								: 'border-border text-text-secondary hover:border-brand-light',
 						].join(' ')}
 					>

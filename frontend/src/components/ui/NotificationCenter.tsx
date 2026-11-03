@@ -33,7 +33,7 @@ function NotifItem({ n, onRead }: { n: AppNotification; onRead: (id: string) => 
     >
       <div className={[
         'mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full',
-        !n.read ? 'bg-brand/15 text-brand' : 'bg-surface-secondary text-text-muted',
+        !n.read ? 'bg-brand/15 text-brand-text' : 'bg-surface-secondary text-text-muted',
       ].join(' ')}>
         <Bell size={13} />
       </div>

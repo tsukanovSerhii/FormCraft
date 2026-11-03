@@ -42,8 +42,8 @@ export default function LineChart({ points = [], labels = [] }: LineChartProps) 
       >
         <defs>
           <linearGradient id="lcGrad" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="#6c63ff" stopOpacity="0.18" />
-            <stop offset="100%" stopColor="#6c63ff" stopOpacity="0" />
+            <stop offset="0%" style={{ stopColor: 'var(--color-brand-text)' }} stopOpacity="0.18" />
+            <stop offset="100%" style={{ stopColor: 'var(--color-brand-text)' }} stopOpacity="0" />
           </linearGradient>
         </defs>
 
@@ -65,7 +65,7 @@ export default function LineChart({ points = [], labels = [] }: LineChartProps) 
 
         {/* Line */}
         {points.length > 1 && (
-          <path d={linePath} fill="none" stroke="#6c63ff" strokeWidth="2.5"
+          <path d={linePath} fill="none" stroke="currentColor" className="text-brand-text" strokeWidth="2.5"
             strokeLinejoin="round" strokeLinecap="round" />
         )}
 
@@ -87,12 +87,12 @@ export default function LineChart({ points = [], labels = [] }: LineChartProps) 
             {hovered === i && (
               <>
                 <line x1={px(i)} y1={PAD_T} x2={px(i)} y2={PAD_T + H}
-                  stroke="#6c63ff" strokeWidth="1" strokeDasharray="3 3" strokeOpacity="0.5" />
-                <circle cx={px(i)} cy={py(v)} r="5" fill="#6c63ff" />
+                  stroke="currentColor" className="text-brand-text" strokeWidth="1" strokeDasharray="3 3" strokeOpacity="0.5" />
+                <circle cx={px(i)} cy={py(v)} r="5" fill="currentColor" className="text-brand-text" />
                 <circle cx={px(i)} cy={py(v)} r="3" fill="white" />
                 {/* tooltip box */}
                 <rect x={px(i) - 22} y={py(v) - 26} width="44" height="20"
-                  rx="4" fill="#6c63ff" />
+                  rx="4" fill="currentColor" className="text-brand-text" />
                 <text x={px(i)} y={py(v) - 12} textAnchor="middle"
                   fontSize="11" fontWeight="bold" fill="white">{v}</text>
               </>

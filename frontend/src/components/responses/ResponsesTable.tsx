@@ -40,7 +40,7 @@ export function ResponsesTable({ rows, onView }: Props) {
               </td>
               <td className="px-5 py-4">
                 <div className="flex items-center gap-2.5">
-                  <span className="flex h-7 w-7 items-center justify-center rounded-full bg-brand-muted text-[11px] font-bold text-brand">
+                  <span className="flex h-7 w-7 items-center justify-center rounded-full bg-brand-muted text-[11px] font-bold text-brand-text">
                     {initials(r.formTitle)}
                   </span>
                   <span className="text-[13px] font-medium text-text-primary">{r.formTitle}</span>

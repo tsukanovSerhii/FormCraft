@@ -48,7 +48,7 @@ export default function FormCanvas() {
 						<AddFieldZone onClick={() => setModalOpen(true)} />
 						<Button
 							variant="outline"
-							className="h-11 w-full rounded-lg border-brand text-brand hover:bg-brand-muted"
+							className="h-11 w-full rounded-lg border-brand text-brand-text hover:bg-brand-muted"
 							icon={<Plus size={16} />}
 							onClick={() => setModalOpen(true)}
 						>

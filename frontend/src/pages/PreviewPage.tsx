@@ -35,7 +35,7 @@ export default function PreviewPage() {
         <p className="text-[16px] font-semibold text-text-primary">Form not found</p>
         <button
           onClick={() => navigate('/forms')}
-          className="rounded-lg bg-brand px-4 py-2 text-[13px] font-semibold text-white hover:bg-brand-dark"
+          className="rounded-lg bg-brand px-4 py-2 text-[13px] font-semibold text-surface hover:bg-brand-dark"
         >
           Back to Dashboard
         </button>
@@ -89,7 +89,7 @@ export default function PreviewPage() {
 
         <div className="fixed bottom-5 left-5 flex items-center gap-2 rounded-full bg-text-primary px-4 py-2 shadow-panel">
           <span className="h-2 w-2 rounded-full bg-success" />
-          <span className="text-[12px] font-semibold text-white">LIVE PREVIEW</span>
+          <span className="text-[12px] font-semibold text-surface">LIVE PREVIEW</span>
         </div>
 
         <button className="fixed bottom-5 right-5 flex h-9 w-9 items-center justify-center rounded-full border border-border bg-surface text-text-muted shadow-card transition-colors hover:text-text-primary">

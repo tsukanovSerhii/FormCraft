@@ -72,7 +72,7 @@ export function FieldPreview({ field, onUpdate }: Props) {
             <Star
               key={i}
               size={20}
-              className={i < current ? 'fill-[#ffa502] text-[#ffa502]' : 'text-text-placeholder'}
+              className={i < current ? 'fill-star text-star' : 'text-text-placeholder'}
               onClick={() => onUpdate({ defaultValue: String(i + 1) })}
               style={{ cursor: 'pointer' }}
             />

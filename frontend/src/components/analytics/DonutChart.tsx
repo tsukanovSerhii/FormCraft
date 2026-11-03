@@ -25,7 +25,7 @@ export default function DonutChart({ value, centerLabel, segments }: DonutChartP
         <circle
           cx={cx} cy={cy} r={r}
           fill="none"
-          stroke="#6c63ff"
+          stroke="currentColor" className="text-brand-text"
           strokeWidth="14"
           strokeDasharray={`${filled} ${full - filled}`}
           strokeDashoffset={full * 0.25}

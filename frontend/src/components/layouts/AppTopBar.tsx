@@ -19,7 +19,7 @@ export default function AppTopBar() {
 							[
 								'relative px-3 py-1.5 text-[13px] font-medium transition-all',
 								isActive
-									? 'text-brand after:absolute after:inset-x-0 after:-bottom-3 after:h-0.5 after:rounded-full after:bg-brand'
+									? 'text-brand-text after:absolute after:inset-x-0 after:-bottom-3 after:h-0.5 after:rounded-full after:bg-brand'
 									: 'text-text-secondary hover:text-text-primary',
 							].join(' ')
 						}

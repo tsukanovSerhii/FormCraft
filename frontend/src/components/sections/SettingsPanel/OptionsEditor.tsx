@@ -72,7 +72,7 @@ export default function OptionsEditor({ fieldId, options }: OptionsEditorProps) 
 		<div className="flex flex-col gap-2">
 			<div className="flex items-center justify-between">
 				<SectionLabel>Options</SectionLabel>
-				<button onClick={addOption} className="text-[11px] font-semibold text-brand hover:underline">
+				<button onClick={addOption} className="text-[11px] font-semibold text-brand-text hover:underline">
 					+ Add Option
 				</button>
 			</div>

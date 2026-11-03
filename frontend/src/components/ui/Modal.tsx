@@ -26,7 +26,7 @@ export default function Modal({ open, onClose, title, children, className }: Mod
 		<div className="fixed inset-0 z-50 flex items-center justify-center">
 			{/* Backdrop */}
 			<div
-				className="absolute inset-0 bg-text-primary/30 backdrop-blur-[2px]"
+				className="absolute inset-0 bg-black/40 backdrop-blur-[2px]"
 				onClick={onClose}
 			/>
 

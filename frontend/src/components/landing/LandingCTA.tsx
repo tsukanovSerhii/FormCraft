@@ -22,7 +22,7 @@ export function LandingCTA() {
         <Link
           to="/login"
           className="inline-flex items-center gap-2 px-8.5 py-3.75 rounded-lg text-[17px] font-bold text-[#fbf7ff] transition-all hover:-translate-y-px"
-          style={{ background: 'linear-gradient(135deg,#4e45e2 0%,#6a63ff 100%)', boxShadow: '0 4px 20px rgba(106,99,255,0.25)' }}
+          style={{ background: 'linear-gradient(135deg,#4e45e2 0%,#5850ec 100%)', boxShadow: '0 4px 20px rgba(106,99,255,0.25)' }}
         >
           Start building
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">

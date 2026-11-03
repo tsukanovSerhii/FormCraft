@@ -26,7 +26,7 @@ export default function SettingsPage() {
                 className={[
                   'relative px-4 py-2 text-sm font-medium transition-colors',
                   tab === t.id
-                    ? 'text-brand after:absolute after:inset-x-0 after:-bottom-px after:h-0.5 after:rounded-full after:bg-brand'
+                    ? 'text-brand-text after:absolute after:inset-x-0 after:-bottom-px after:h-0.5 after:rounded-full after:bg-brand'
                     : 'text-text-secondary hover:text-text-primary',
                 ].join(' ')}
               >

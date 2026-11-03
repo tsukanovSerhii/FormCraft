@@ -59,7 +59,7 @@ export function LandingNavbar() {
           <Link
             to="/login"
             className="flex items-center gap-2 px-4.5 py-2.25 rounded-md text-[14px] font-bold text-[#fbf7ff] transition-all hover:-translate-y-px"
-            style={{ background: 'linear-gradient(135deg,#4e45e2 0%,#6a63ff 100%)', boxShadow: '0 4px 20px rgba(106,99,255,0.25)' }}
+            style={{ background: 'linear-gradient(135deg,#4e45e2 0%,#5850ec 100%)', boxShadow: '0 4px 20px rgba(106,99,255,0.25)' }}
           >
             Get started <ArrowRightIcon size={14} />
           </Link>

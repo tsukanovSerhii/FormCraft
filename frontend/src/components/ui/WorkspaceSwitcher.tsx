@@ -57,7 +57,7 @@ export function WorkspaceSwitcher() {
         {active
           ? <WorkspaceAvatar name={active.name} />
           : <div className="h-5 w-5 rounded flex items-center justify-center bg-brand-muted">
-              <span className="text-[9px] font-bold text-brand">P</span>
+              <span className="text-[9px] font-bold text-brand-text">P</span>
             </div>
         }
         <div className="min-w-0 flex-1">
@@ -79,10 +79,10 @@ export function WorkspaceSwitcher() {
             className="flex w-full items-center gap-2.5 px-3 py-2 text-left text-[13px] hover:bg-surface-secondary transition-colors"
           >
             <div className="h-5 w-5 rounded flex items-center justify-center bg-brand-muted shrink-0">
-              <span className="text-[9px] font-bold text-brand">P</span>
+              <span className="text-[9px] font-bold text-brand-text">P</span>
             </div>
             <span className="flex-1 truncate text-text-primary font-medium">{user?.name ?? 'Personal'}</span>
-            {activeWorkspaceId === null && <Check size={13} className="text-brand shrink-0" />}
+            {activeWorkspaceId === null && <Check size={13} className="text-brand-text shrink-0" />}
           </button>
 
           {/* Workspace list */}
@@ -97,7 +97,7 @@ export function WorkspaceSwitcher() {
                 <p className="truncate text-text-primary font-medium">{ws.name}</p>
                 <p className="text-[10px] text-text-muted capitalize">{ws.role}</p>
               </div>
-              {activeWorkspaceId === ws.id && <Check size={13} className="text-brand shrink-0" />}
+              {activeWorkspaceId === ws.id && <Check size={13} className="text-brand-text shrink-0" />}
               {ws.role === 'owner' && (
                 <button
                   onClick={e => { e.stopPropagation(); navigate(`/settings/workspace/${ws.id}`); setOpen(false) }}
