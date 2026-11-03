@@ -411,3 +411,31 @@ describe('workspace members and forms', () => {
     expect(db.form.create).not.toHaveBeenCalled()
   })
 })
+
+// ── Notifications ─────────────────────────────────────────────────────────────
+
+describe('notifications', () => {
+  beforeEach(() => { vi.clearAllMocks() })
+
+  it('lists notifications for the signed-in user', async () => {
+    db.notification.findMany.mockResolvedValue([{ id: 'n-1', title: 'New response' }])
+    const res = await request(app).get('/api/notifications').set(authHeader())
+    expect(res.status).toBe(200)
+    expect(db.notification.findMany.mock.calls[0][0].where).toEqual({ userId: 'user-1' })
+  })
+
+  it('rejects the event stream without the refresh cookie', async () => {
+    const res = await request(app).get('/api/notifications/stream').set(authHeader())
+    expect(res.status).toBe(401)
+  })
+
+  it('creates a notification for the owner when a response arrives', async () => {
+    db.form.findUnique.mockResolvedValue({ id: 'form-1', userId: 'owner-1', title: 'Survey', status: 'published', fields: [] })
+    db.response.create.mockResolvedValue({ id: 'resp-9' })
+    db.user.findUnique.mockResolvedValue({ email: 'o@x.io', notifyOnResponse: false })
+    const res = await request(app).post('/api/responses/form-1/submit').send({})
+    expect(res.status).toBe(201)
+    await vi.waitFor(() => expect(db.notification.create).toHaveBeenCalled())
+    expect(db.notification.create.mock.calls[0][0].data).toMatchObject({ userId: 'owner-1', meta: { formId: 'form-1', responseId: 'resp-9' } })
+  })
+})

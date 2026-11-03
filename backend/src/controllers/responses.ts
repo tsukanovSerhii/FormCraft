@@ -3,7 +3,7 @@ import { Prisma } from '@prisma/client'
 import type { AuthRequest } from '../middleware/auth'
 import prisma from '../utils/prisma'
 import { sanitizeResponseData } from '../utils/sanitize'
-import { sendNewResponseEmail } from '../services/email'
+import { notifyNewResponse } from '../services/notify'
 import { findAccessibleForm } from '../utils/formAccess'
 import { validateSubmission } from '../utils/submission'
 
@@ -43,19 +43,8 @@ export async function submitResponse(req: Request, res: Response) {
     data: { formId, userId: userId ?? null, data: result.data as Prisma.InputJsonObject },
   })
 
-  // Fire-and-forget email to form owner
-  prisma.user.findUnique({ where: { id: form.userId }, select: { email: true } })
-    .then(owner => {
-      if (owner) {
-        sendNewResponseEmail({
-          to: owner.email,
-          formTitle: form.title,
-          formId,
-          responseId: response.id,
-        }).catch(() => {})
-      }
-    })
-    .catch(() => {})
+  // Fire-and-forget: a notification failure must not fail the submission
+  notifyNewResponse(form, response.id).catch(err => console.error('notifyNewResponse failed:', err))
 
   res.status(201).json(response)
 }
