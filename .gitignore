@@ -37,3 +37,4 @@ lerna-debug.log*
 # Claude
 .claude/
 
+.neon
