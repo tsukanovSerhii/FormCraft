@@ -23,11 +23,11 @@ export default function FormRenderer({ form, onSubmit }: FormRendererProps) {
             {i > 0 && <div className="mb-6 h-px bg-border" />}
             <label className="mb-2 block text-[13px] font-medium text-text-primary">
               {field.label}
-              {field.required && <span className="ml-1 text-error">*</span>}
+              {field.required && <span className="ml-1 text-danger">*</span>}
             </label>
             <FieldInput field={field} error={errors[field.id]?.message as string} />
             {errors[field.id] && (
-              <p className="mt-1.5 text-[12px] text-error">
+              <p className="mt-1.5 text-[12px] text-danger">
                 {errors[field.id]?.message as string}
               </p>
             )}

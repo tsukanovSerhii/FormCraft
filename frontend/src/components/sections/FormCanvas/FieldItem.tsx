@@ -23,7 +23,7 @@ export default function FieldItem({ field, isSelected }: Props) {
       <div className="min-w-0 flex-1">
         <div className="mb-2 flex items-center gap-1">
           <p className="text-[14px] font-medium text-text-primary">{field.label}</p>
-          {field.required && <span className="text-[12px] text-error">*</span>}
+          {field.required && <span className="text-[12px] text-danger">*</span>}
         </div>
         <FieldPreview field={field} onUpdate={patch => updateField(field.id, patch)} />
       </div>

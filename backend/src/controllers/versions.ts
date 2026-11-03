@@ -2,10 +2,11 @@ import type { Request, Response } from 'express'
 import { Prisma } from '@prisma/client'
 import type { AuthRequest } from '../middleware/auth'
 import prisma from '../utils/prisma'
+import { findAccessibleForm } from '../utils/formAccess'
 
 export async function getVersions(req: Request, res: Response) {
   const userId = (req as AuthRequest).userId
-  const form = await prisma.form.findFirst({ where: { id: req.params.formId, userId } })
+  const form = await findAccessibleForm(req.params.formId, userId)
   if (!form) { res.status(404).json({ error: 'Form not found' }); return }
 
   const versions = await prisma.formVersion.findMany({
@@ -18,7 +19,7 @@ export async function getVersions(req: Request, res: Response) {
 
 export async function restoreVersion(req: Request, res: Response) {
   const userId = (req as AuthRequest).userId
-  const form = await prisma.form.findFirst({ where: { id: req.params.formId, userId } })
+  const form = await findAccessibleForm(req.params.formId, userId, 'write')
   if (!form) { res.status(404).json({ error: 'Form not found' }); return }
 
   const version = await prisma.formVersion.findFirst({

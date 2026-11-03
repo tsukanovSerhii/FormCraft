@@ -1,4 +1,5 @@
 import type { Request, Response } from 'express'
+import type { AuthRequest } from '../middleware/auth'
 import prisma from '../utils/prisma'
 
 const sseClients = new Map<string, Set<Response>>()
@@ -22,8 +23,7 @@ export function pushToUser(userId: string, data: object) {
 }
 
 export async function sseStream(req: Request, res: Response) {
-  const userId = (req as Request & { user?: { id: string } }).user?.id
-  if (!userId) { res.status(401).json({ error: 'Unauthorized' }); return }
+  const userId = (req as AuthRequest).userId
 
   res.setHeader('Content-Type', 'text/event-stream')
   res.setHeader('Cache-Control', 'no-cache')
@@ -46,8 +46,7 @@ export async function sseStream(req: Request, res: Response) {
 }
 
 export async function listNotifications(req: Request, res: Response) {
-  const userId = (req as Request & { user?: { id: string } }).user?.id
-  if (!userId) { res.status(401).json({ error: 'Unauthorized' }); return }
+  const userId = (req as AuthRequest).userId
 
   const notifications = await prisma.notification.findMany({
     where: { userId },
@@ -59,8 +58,7 @@ export async function listNotifications(req: Request, res: Response) {
 }
 
 export async function markRead(req: Request, res: Response) {
-  const userId = (req as Request & { user?: { id: string } }).user?.id
-  if (!userId) { res.status(401).json({ error: 'Unauthorized' }); return }
+  const userId = (req as AuthRequest).userId
 
   const { id } = req.params
   const n = await prisma.notification.findFirst({ where: { id, userId } })
@@ -71,24 +69,21 @@ export async function markRead(req: Request, res: Response) {
 }
 
 export async function markAllRead(req: Request, res: Response) {
-  const userId = (req as Request & { user?: { id: string } }).user?.id
-  if (!userId) { res.status(401).json({ error: 'Unauthorized' }); return }
+  const userId = (req as AuthRequest).userId
 
   await prisma.notification.updateMany({ where: { userId, read: false }, data: { read: true } })
   res.json({ ok: true })
 }
 
 export async function getPreferences(req: Request, res: Response) {
-  const userId = (req as Request & { user?: { id: string } }).user?.id
-  if (!userId) { res.status(401).json({ error: 'Unauthorized' }); return }
+  const userId = (req as AuthRequest).userId
 
   const user = await prisma.user.findUnique({ where: { id: userId }, select: { notifyOnResponse: true } })
   res.json({ notifyOnResponse: user?.notifyOnResponse ?? true })
 }
 
 export async function updatePreferences(req: Request, res: Response) {
-  const userId = (req as Request & { user?: { id: string } }).user?.id
-  if (!userId) { res.status(401).json({ error: 'Unauthorized' }); return }
+  const userId = (req as AuthRequest).userId
 
   const { notifyOnResponse } = req.body as { notifyOnResponse?: boolean }
   const updated = await prisma.user.update({

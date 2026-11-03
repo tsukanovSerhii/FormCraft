@@ -1,13 +1,14 @@
 import type { Request, Response } from 'express'
 import type { AuthRequest } from '../middleware/auth'
 import prisma from '../utils/prisma'
+import { findAccessibleForm } from '../utils/formAccess'
 
 export async function getFormAnalytics(req: Request, res: Response) {
   const userId = (req as AuthRequest).userId
   const { formId } = req.params
   const days = Math.min(365, parseInt(req.query.days as string) || 30)
 
-  const form = await prisma.form.findFirst({ where: { id: formId, userId } })
+  const form = await findAccessibleForm(formId, userId)
   if (!form) {
     res.status(404).json({ error: 'Form not found' })
     return

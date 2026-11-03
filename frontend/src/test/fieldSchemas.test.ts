@@ -165,4 +165,46 @@ describe('buildValidationSchema', () => {
       expect(schema.safeParse({ name: 'John', email: 'bad' }).success).toBe(false)
     })
   })
+  // ── empty optional fields (form inputs start as '') ──────
+
+  describe('optional fields left blank', () => {
+    it.each(['email', 'phone', 'date', 'select', 'radio', 'number'] as const)('accepts empty %s', type => {
+      const schema = buildValidationSchema([field({ type })])
+      expect(schema.safeParse({ f1: '' }).success).toBe(true)
+    })
+
+    it('accepts an unrated optional rating', () => {
+      const schema = buildValidationSchema([field({ type: 'rating' })])
+      expect(schema.safeParse({ f1: 0 }).success).toBe(true)
+    })
+  })
+
+  describe('required number', () => {
+    it('rejects an empty value instead of coercing it to 0', () => {
+      const schema = buildValidationSchema([field({ type: 'number', required: true })])
+      expect(schema.safeParse({ f1: '' }).success).toBe(false)
+    })
+  })
+
+  // ── conditional logic ────────────────────────────────────
+
+  describe('conditional fields', () => {
+    const fields: FormField[] = [
+      { id: 'role', type: 'select', label: 'Role', required: true },
+      { id: 'company', type: 'text', label: 'Company', required: true,
+        condition: { fieldId: 'role', operator: 'equals', value: 'Employee' } },
+    ]
+
+    it('does not require a field hidden by its condition', () => {
+      const schema = buildValidationSchema(fields)
+      expect(schema.safeParse({ role: 'Student', company: '' }).success).toBe(true)
+    })
+
+    it('requires the field once its condition makes it visible', () => {
+      const schema = buildValidationSchema(fields)
+      const result = schema.safeParse({ role: 'Employee', company: '' })
+      expect(result.success).toBe(false)
+      expect(result.error?.issues[0].path).toEqual(['company'])
+    })
+  })
 })

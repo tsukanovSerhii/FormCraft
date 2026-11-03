@@ -8,13 +8,11 @@ import { PreviewTopBar } from '@/components/preview'
 import { FormRenderer, SuccessScreen } from '@/components/sections/FormRenderer'
 import { buildValidationSchema } from '@/schemas/fieldSchemas'
 import { useFormBuilderStore } from '@/store/formBuilderStore'
-import { useResponsesStore } from '@/store/responsesStore'
 
 export default function PreviewPage() {
   const { formId } = useParams<{ formId: string }>()
   const navigate = useNavigate()
   const { forms } = useFormBuilderStore()
-  const { addResponse } = useResponsesStore()
   const [viewMode, setViewMode] = useState<'desktop' | 'mobile'>('desktop')
   const [submitted, setSubmitted] = useState(false)
 
@@ -43,8 +41,8 @@ export default function PreviewPage() {
     )
   }
 
-  function onSubmit(data: Record<string, unknown>) {
-    addResponse(form!.id, form!.title, data)
+  // Preview never records responses — owner test runs must not mix with real data
+  function onSubmit() {
     setSubmitted(true)
   }
 
@@ -89,7 +87,7 @@ export default function PreviewPage() {
 
         <div className="fixed bottom-5 left-5 flex items-center gap-2 rounded-full bg-text-primary px-4 py-2 shadow-panel">
           <span className="h-2 w-2 rounded-full bg-success" />
-          <span className="text-[12px] font-semibold text-surface">LIVE PREVIEW</span>
+          <span className="text-[12px] font-semibold text-surface">PREVIEW · RESPONSES NOT SAVED</span>
         </div>
 
         <button className="fixed bottom-5 right-5 flex h-9 w-9 items-center justify-center rounded-full border border-border bg-surface text-text-muted shadow-card transition-colors hover:text-text-primary">

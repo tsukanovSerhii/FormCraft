@@ -34,7 +34,12 @@ export const responsesApi = {
       headers: { 'Content-Type': 'application/json' },
       credentials: 'include',
       body: JSON.stringify(data),
-    }).then(r => r.json()),
+    }).then(async r => {
+      const body = await r.json().catch(() => ({}))
+      // Surface HTTP errors (validation, expired form, rate limit) instead of resolving
+      if (!r.ok) throw new Error(body.error ?? `Submission failed (${r.status})`)
+      return body
+    }),
 
   getAll: (formId: string, page = 1, limit = 20) =>
     api.get<PaginatedResponses>(`/api/responses/${formId}?page=${page}&limit=${limit}`)

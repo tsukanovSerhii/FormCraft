@@ -4,7 +4,7 @@ import { Controller } from 'react-hook-form'
 import type { FormField } from '@/types/form'
 
 const inputClass = 'w-full rounded-lg border border-border bg-surface-secondary px-3 py-2.5 text-[13px] text-text-primary placeholder:text-text-placeholder focus:border-brand focus:outline-none transition-colors'
-const errorClass = 'border-error focus:border-error'
+const errorClass = 'border-danger focus:border-danger'
 
 interface FieldInputProps {
   field: FormField
@@ -72,7 +72,7 @@ export default function FieldInput({ field, error }: FieldInputProps) {
                 <label key={opt.id} className="flex cursor-pointer items-center gap-3">
                   <span className={[
                     'flex h-4 w-4 shrink-0 items-center justify-center rounded-full border-2 transition-colors',
-                    f.value === opt.id ? 'border-brand' : error ? 'border-error' : 'border-border',
+                    f.value === opt.id ? 'border-brand' : error ? 'border-danger' : 'border-border',
                   ].join(' ')}>
                     {f.value === opt.id && <span className="h-2 w-2 rounded-full bg-brand" />}
                   </span>
@@ -102,7 +102,7 @@ export default function FieldInput({ field, error }: FieldInputProps) {
                     <label key={opt.id} onClick={() => toggle(opt.id)} className="flex cursor-pointer items-center gap-3">
                       <span className={[
                         'flex h-4 w-4 shrink-0 items-center justify-center rounded border-2 transition-colors',
-                        checked ? 'border-brand bg-brand' : error ? 'border-error' : 'border-border',
+                        checked ? 'border-brand bg-brand' : error ? 'border-danger' : 'border-border',
                       ].join(' ')}>
                         {checked && (
                           <svg width="9" height="7" viewBox="0 0 9 7" fill="none">
@@ -169,7 +169,7 @@ export default function FieldInput({ field, error }: FieldInputProps) {
           render={({ field: f }) => (
             <label className={[
               'flex cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed py-8 transition-colors',
-              error ? 'border-error' : 'border-border hover:border-brand-light',
+              error ? 'border-danger' : 'border-border hover:border-brand-light',
             ].join(' ')}>
               <p className="text-[13px] text-text-muted">
                 {f.value ? (f.value as File).name : 'Click to upload or drag & drop'}

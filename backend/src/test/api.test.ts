@@ -205,7 +205,7 @@ describe('POST /api/forms', () => {
 describe('DELETE /api/forms/:id', () => {
   beforeEach(() => {
     vi.clearAllMocks()
-    db.form.findFirst.mockResolvedValue({ id: 'form-1', userId: 'user-1' })
+    db.form.findUnique.mockResolvedValue({ id: 'form-1', userId: 'user-1', workspaceId: null })
     db.form.delete.mockResolvedValue({})
   })
 
@@ -219,7 +219,7 @@ describe('DELETE /api/forms/:id', () => {
   })
 
   it('returns 404 when form not found', async () => {
-    db.form.findFirst.mockResolvedValue(null)
+    db.form.findUnique.mockResolvedValue(null)
     const res = await request(app)
       .delete('/api/forms/nonexistent')
       .set(authHeader())
@@ -295,7 +295,7 @@ describe('POST /api/responses/:formId/submit', () => {
 describe('GET /api/responses/:formId', () => {
   beforeEach(() => {
     vi.clearAllMocks()
-    db.form.findFirst.mockResolvedValue({ id: 'form-1', userId: 'user-1' })
+    db.form.findUnique.mockResolvedValue({ id: 'form-1', userId: 'user-1', workspaceId: null })
     db.response.findMany.mockResolvedValue([])
     db.response.count.mockResolvedValue(0)
   })
@@ -309,7 +309,7 @@ describe('GET /api/responses/:formId', () => {
   })
 
   it('returns 404 for non-owned form', async () => {
-    db.form.findFirst.mockResolvedValue(null)
+    db.form.findUnique.mockResolvedValue(null)
     const res = await request(app)
       .get('/api/responses/form-1')
       .set(authHeader())
@@ -319,5 +319,123 @@ describe('GET /api/responses/:formId', () => {
   it('returns 401 without token', async () => {
     const res = await request(app).get('/api/responses/form-1')
     expect(res.status).toBe(401)
+  })
+})
+
+// ── Submission validation ─────────────────────────────────────────────────────
+
+describe('POST /api/responses/:formId/submit — validation', () => {
+  const fields = [
+    { id: 'name', type: 'text', label: 'Name', required: true },
+    { id: 'email', type: 'email', label: 'Email', required: false },
+    { id: 'role', type: 'select', label: 'Role', required: true },
+    { id: 'company', type: 'text', label: 'Company', required: true,
+      condition: { fieldId: 'role', operator: 'equals', value: 'Employee' } },
+    { id: 'score', type: 'rating', label: 'Score', required: false, ratingMax: 5 },
+  ]
+
+  beforeEach(() => {
+    vi.clearAllMocks()
+    db.form.findUnique.mockResolvedValue({ id: 'form-1', userId: 'owner', status: 'published', fields })
+    db.response.create.mockImplementation(({ data }: any) => Promise.resolve({ id: 'resp-1', ...data }))
+    db.user.findUnique.mockResolvedValue(null)
+  })
+
+  const submit = (body: object) => request(app).post('/api/responses/form-1/submit').send(body)
+
+  it('rejects a missing required field', async () => {
+    const res = await submit({ role: 'Student' })
+    expect(res.status).toBe(400)
+    expect(res.body.error).toContain('Name')
+    expect(db.response.create).not.toHaveBeenCalled()
+  })
+
+  it('skips required fields hidden by their condition', async () => {
+    const res = await submit({ name: 'Ann', role: 'Student' })
+    expect(res.status).toBe(201)
+  })
+
+  it('requires a conditional field once it is visible', async () => {
+    const res = await submit({ name: 'Ann', role: 'Employee' })
+    expect(res.status).toBe(400)
+    expect(res.body.error).toContain('Company')
+  })
+
+  it('stores only answers to fields of the form', async () => {
+    await submit({ name: 'Ann', role: 'Student', company: 'Hidden Co', injected: 'x'.repeat(50) })
+    expect(db.response.create.mock.calls[0][0].data.data).toEqual({ name: 'Ann', role: 'Student' })
+  })
+
+  it('rejects an invalid email and an out-of-range rating', async () => {
+    expect((await submit({ name: 'Ann', role: 'Student', email: 'nope' })).status).toBe(400)
+    expect((await submit({ name: 'Ann', role: 'Student', score: 9 })).status).toBe(400)
+  })
+})
+
+// ── Workspace access to forms ─────────────────────────────────────────────────
+
+describe('workspace members and forms', () => {
+  const teamForm = { id: 'form-1', userId: 'author', workspaceId: 'ws-1', status: 'draft', fields: [] }
+
+  beforeEach(() => {
+    vi.clearAllMocks()
+    db.form.findUnique.mockResolvedValue(teamForm)
+    db.response.findMany.mockResolvedValue([])
+    db.response.count.mockResolvedValue(0)
+  })
+
+  it('lets a viewer read responses of a team form', async () => {
+    db.workspaceMember.findUnique.mockResolvedValue({ role: 'viewer', acceptedAt: new Date() })
+    const res = await request(app).get('/api/responses/form-1').set(authHeader())
+    expect(res.status).toBe(200)
+  })
+
+  it('does not let a viewer delete a team form', async () => {
+    db.workspaceMember.findUnique.mockResolvedValue({ role: 'viewer', acceptedAt: new Date() })
+    const res = await request(app).delete('/api/forms/form-1').set(authHeader()).set('Origin', 'http://localhost:5173')
+    expect(res.status).toBe(404)
+    expect(db.form.delete).not.toHaveBeenCalled()
+  })
+
+  it('hides team forms from users who have not accepted the invitation', async () => {
+    db.workspaceMember.findUnique.mockResolvedValue({ role: 'editor', acceptedAt: null })
+    const res = await request(app).get('/api/responses/form-1').set(authHeader())
+    expect(res.status).toBe(404)
+  })
+
+  it('refuses to create a form in a workspace the user does not belong to', async () => {
+    db.workspaceMember.findUnique.mockResolvedValue(null)
+    const res = await request(app).post('/api/forms').set(authHeader()).set('Origin', 'http://localhost:5173')
+      .send({ title: 'Sneaky', workspaceId: 'someone-elses' })
+    expect(res.status).toBe(403)
+    expect(db.form.create).not.toHaveBeenCalled()
+  })
+})
+
+// ── Notifications ─────────────────────────────────────────────────────────────
+
+describe('notifications', () => {
+  beforeEach(() => { vi.clearAllMocks() })
+
+  it('lists notifications for the signed-in user', async () => {
+    db.notification.findMany.mockResolvedValue([{ id: 'n-1', title: 'New response' }])
+    const res = await request(app).get('/api/notifications').set(authHeader())
+    expect(res.status).toBe(200)
+    expect(db.notification.findMany.mock.calls[0][0].where).toEqual({ userId: 'user-1' })
+  })
+
+  it('rejects the event stream without the refresh cookie', async () => {
+    const res = await request(app).get('/api/notifications/stream').set(authHeader())
+    expect(res.status).toBe(401)
+  })
+
+  it('creates a notification for the owner when a response arrives', async () => {
+    db.form.findUnique.mockResolvedValue({ id: 'form-1', userId: 'owner-1', title: 'Survey', status: 'published', fields: [] })
+    db.response.create.mockResolvedValue({ id: 'resp-9' })
+    db.user.findUnique.mockResolvedValue({ email: 'o@x.io', notifyOnResponse: false })
+    const res = await request(app).post('/api/responses/form-1/submit').send({})
+    expect(res.status).toBe(201)
+    await vi.waitFor(() => expect(db.notification.create).toHaveBeenCalled())
+    expect(db.notification.create.mock.calls[0][0].data).toMatchObject({ userId: 'owner-1', meta: { formId: 'form-1', responseId: 'resp-9' } })
   })
 })

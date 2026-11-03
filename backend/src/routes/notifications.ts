@@ -1,5 +1,5 @@
 import { Router } from 'express'
-import { requireAuth } from '../middleware/auth'
+import { requireAuth, requireAuthFromCookie } from '../middleware/auth'
 import {
   sseStream,
   listNotifications,
@@ -11,7 +11,7 @@ import {
 
 const router = Router()
 
-router.get('/stream',        requireAuth, sseStream)
+router.get('/stream',        requireAuthFromCookie, sseStream)
 router.get('/preferences',   requireAuth, getPreferences)
 router.patch('/preferences', requireAuth, updatePreferences)
 router.get('/',              requireAuth, listNotifications)
