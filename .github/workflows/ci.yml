@@ -10,37 +10,32 @@ jobs:
   frontend:
     name: Frontend — lint, test, build
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: frontend
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
         with:
           node-version: 22
           cache: npm
           cache-dependency-path: package-lock.json
 
+      # npm workspaces: a single lockfile at the repo root
       - name: Install dependencies
-        run: cd .. && npm install
+        run: npm ci
 
       - name: Lint
-        run: npm run lint
+        run: npm run lint -w frontend
 
       - name: Test
-        run: npm test
+        run: npm test -w frontend
 
       - name: Build
-        run: npm run build
+        run: npm run build -w frontend
 
   backend:
     name: Backend — test, build
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: backend
 
     env:
       JWT_SECRET: ci-test-secret
@@ -48,19 +43,20 @@ jobs:
       FRONTEND_URL: http://localhost:5173
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
         with:
           node-version: 22
           cache: npm
-          cache-dependency-path: backend/package-lock.json
+          cache-dependency-path: package-lock.json
 
       - name: Install dependencies
-        run: npm install
+        run: npm ci
 
       - name: Test
-        run: npm test
+        run: npm test -w backend
 
+      # build runs `prisma generate` before tsc
       - name: Build
-        run: npm run build
+        run: npm run build -w backend
