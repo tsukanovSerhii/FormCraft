@@ -1,6 +1,9 @@
+// Must load before routes: forwards rejected promises from async handlers to the error
+// middleware (Express 4 otherwise leaves them unhandled and the process crashes)
+import 'express-async-errors'
 import cookieParser from 'cookie-parser'
 import cors from 'cors'
-import express from 'express'
+import express, { type NextFunction, type Request, type Response } from 'express'
 import helmet from 'helmet'
 import path from 'path'
 import passport from 'passport'
@@ -46,5 +49,17 @@ if (frontendDist) {
   app.use(express.static(frontendDist, { index: false, maxAge: '1h' }))
   app.get(/^\/(?!api\/).*/, (_req, res) => { res.sendFile(indexHtml) })
 }
+
+// Last-resort error handler: log and answer 500 instead of crashing or leaking a stack trace
+app.use((err: unknown, req: Request, res: Response, next: NextFunction) => {
+  console.error(`[${req.method} ${req.originalUrl}]`, err)
+  if (res.headersSent) return next(err)
+  // OAuth callbacks are browser navigations — send the user back to the login page
+  if (/^\/api\/auth\/(google|github)/.test(req.path)) {
+    const frontendUrl = process.env.FRONTEND_URL ?? 'http://localhost:5173'
+    return res.redirect(`${frontendUrl}/login?error=oauth_failed`)
+  }
+  res.status(500).json({ error: 'Internal server error' })
+})
 
 export default app

@@ -22,11 +22,12 @@ export function LoginForm({ onSwitch }: { onSwitch: () => void }) {
   const navigate = useNavigate()
   const { setAuth } = useAuthStore()
   const [searchParams] = useSearchParams()
-  const [serverError, setServerError] = useState(() =>
-    searchParams.get('error') === 'oauth_unavailable'
-      ? 'Social sign-in is not configured on this server. Please use email and password.'
-      : ''
-  )
+  const [serverError, setServerError] = useState(() => {
+    const error = searchParams.get('error')
+    if (error === 'oauth_unavailable') return 'Social sign-in is not configured on this server. Please use email and password.'
+    if (error === 'oauth_failed') return 'Social sign-in failed. Please try again or use email and password.'
+    return ''
+  })
 
   const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm<LoginData>({
     resolver: zodResolver(loginSchema),

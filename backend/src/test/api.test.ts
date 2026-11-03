@@ -147,6 +147,14 @@ describe('GET /api/forms', () => {
     const res = await request(app).get('/api/forms')
     expect(res.status).toBe(401)
   })
+
+  it('answers 500 instead of crashing when the database fails', async () => {
+    vi.spyOn(console, 'error').mockImplementation(() => {})
+    db.form.findMany.mockRejectedValue(new Error('connection terminated'))
+    const res = await request(app).get('/api/forms').set(authHeader())
+    expect(res.status).toBe(500)
+    expect(res.body).toEqual({ error: 'Internal server error' })
+  })
 })
 
 describe('POST /api/forms', () => {
