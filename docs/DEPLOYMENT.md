@@ -1,4 +1,4 @@
-# Deploying a free demo
+# Deployment
 
 FormCraft deploys as **one web service**: Express serves both the API and the built
 React app from the same origin. This keeps the `SameSite=lax` refresh-token cookie
@@ -11,7 +11,7 @@ working. Free hosts give the frontend and backend different public-suffix domain
 | App       | [Render](https://render.com)    | 512 MB RAM, sleeps after 15 min idle (~1 min cold start) |
 | Database  | [Neon](https://neon.tech)       | 0.5 GB PostgreSQL, no expiry                             |
 
-The root [`Dockerfile`](Dockerfile) builds everything; [`render.yaml`](render.yaml)
+The root [`Dockerfile`](../Dockerfile) builds everything; [`render.yaml`](../render.yaml)
 describes the service.
 
 ## 1. Database (Neon)
@@ -71,6 +71,29 @@ login page with a message. To enable them, create OAuth apps with these callback
 Then set `GOOGLE_CLIENT_ID` / `GOOGLE_CLIENT_SECRET` and `GITHUB_CLIENT_ID` / `GITHUB_CLIENT_SECRET`.
 
 **Email notifications.** Set `RESEND_API_KEY` (and optionally `EMAIL_FROM`).
+
+## Updating the deployment
+
+Render redeploys automatically when `main` changes. On start the container runs
+`prisma migrate deploy`, so pending migrations are applied before the server accepts traffic.
+
+### Database changes must ship as migrations
+
+Every change to `backend/prisma/schema.prisma` needs a migration in `backend/prisma/migrations/`:
+
+```bash
+npm run db:migrate          # prisma migrate dev: creates the migration and applies it locally
+```
+
+Don't use `prisma db push` for schema changes you commit. It updates only your local database
+and leaves no migration behind. Production then misses the columns, and queries fail with
+`ColumnNotFound`. To check a database for drift:
+
+```bash
+cd backend && npx prisma migrate diff --from-config-datasource --to-schema prisma/schema.prisma --script
+```
+
+An empty result means the database matches the schema.
 
 ## Avoiding cold starts during a demo
 

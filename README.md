@@ -1,119 +1,114 @@
+<div align="center">
+
 # FormCraft
 
-A full-stack form builder with drag & drop, real-time validation, and response tracking.
+**Drag-and-drop form builder with conditional logic, analytics and team workspaces.**
 
-## Tech Stack
+[![CI](https://github.com/tsukanovSerhii/FormCraft/actions/workflows/ci.yml/badge.svg)](https://github.com/tsukanovSerhii/FormCraft/actions/workflows/ci.yml)
+![React](https://img.shields.io/badge/React-19-61dafb?logo=react&logoColor=white)
+![TypeScript](https://img.shields.io/badge/TypeScript-strict-3178c6?logo=typescript&logoColor=white)
+![Express](https://img.shields.io/badge/Express-4-000000?logo=express&logoColor=white)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-Prisma_7-4169e1?logo=postgresql&logoColor=white)
 
-| Layer    | Technology                                        |
-|----------|---------------------------------------------------|
-| Frontend | React 19, Vite, TypeScript, Tailwind CSS, Zustand |
-| Backend  | Node.js, Express, Prisma ORM                      |
-| Database | PostgreSQL                                        |
-| Auth     | JWT (access + refresh), Google OAuth, GitHub OAuth |
-| Deploy   | Docker, Render + Neon (free demo)                 |
+[**Live demo**](https://formcraft-q6os.onrender.com) · [Architecture](docs/ARCHITECTURE.md) · [API](docs/API.md) · [Deployment](docs/DEPLOYMENT.md) · [Roadmap](docs/ROADMAP.md)
 
-## Project Structure
+</div>
 
-```
-FormCraft/
-├── frontend/          # Vite + React app
-├── backend/           # Express API + Prisma
-├── docker-compose.yml
-└── package.json       # npm workspaces root
-```
+> The demo runs on a free Render instance. It sleeps after 15 minutes of inactivity, so the first request can take up to a minute.
 
-## Getting Started
+## Features
 
-### Prerequisites
+**Build**
+- Drag-and-drop editor with 11 field types: text, textarea, number, email, phone, select, radio, checkbox, date, file, rating
+- Conditional logic: show a field only when another answer matches
+- Autosave, desktop/mobile preview, version history with one-click restore
+- Built-in templates plus your own saved templates
 
-- Node.js 20+
-- PostgreSQL 15+ (or use Docker)
-- Google & GitHub OAuth credentials (optional — email/password works without them)
+**Collect**
+- Public link for every published form, with SEO meta tags and a sitemap
+- Response limit and expiry date per form
+- Validation on both sides: the browser and the API apply the same rules, including conditional fields
 
-### 1. Clone and install
+**Analyze**
+- Responses table with search, filters and CSV export
+- Submissions over time, per-field answer distribution, recent activity
+- In-app notifications in real time (Server-Sent Events) and optional email alerts
 
-```bash
-git clone https://github.com/your-username/formcraft.git
-cd formcraft
-npm install
-```
+**Collaborate**
+- Workspaces with `owner` / `editor` / `viewer` roles; invite registered users by their email
+- Sign in with email and password, Google or GitHub
+- Light and dark themes, WCAG AA contrast in both
 
-Run `npm install` only from the repo root. npm workspaces use one root `package-lock.json`, so
-don't create lockfiles inside `frontend/` or `backend/`.
+## Tech stack
 
-### 2. Configure environment
+| Layer | Technology |
+|---|---|
+| Frontend | React 19, TypeScript, Vite, Tailwind CSS v4, Zustand, React Router, React Hook Form + Zod, dnd-kit, Recharts |
+| Backend | Node.js, Express, Prisma 7 (`@prisma/adapter-pg`), Passport, JWT, Helmet, Zod |
+| Database | PostgreSQL (Neon in production, Docker locally) |
+| Tests | Vitest, Testing Library, Supertest |
+| Infra | npm workspaces, Docker, GitHub Actions, Render |
 
-```bash
-cp backend/.env.example backend/.env
-```
+## Quick start
 
-Edit `backend/.env` with your database URL and OAuth credentials.
-
-### 3. Run database migrations
-
-```bash
-npm run db:migrate
-```
-
-### 4. Start development servers
+**Requirements:** Node.js 20+ and PostgreSQL 15+ (or Docker).
 
 ```bash
-npm run dev
+git clone https://github.com/tsukanovSerhii/FormCraft.git
+cd FormCraft
+npm install                              # installs both workspaces
+
+cp backend/.env.example backend/.env     # set DATABASE_URL and the JWT secrets
+npm run db:migrate                       # create the tables
+npm run dev                              # frontend :5173 + backend :3000
 ```
 
-- Frontend: http://localhost:5173
-- Backend API: http://localhost:3000
+Google and GitHub sign-in are optional. Without their keys the app works with email and password.
 
-## Docker
-
-Start everything (app + database) with a single command:
+**Everything in Docker:**
 
 ```bash
-docker compose up --build
+cp .env.example .env
+docker compose up --build                # http://localhost:5173
 ```
-
-The app will be available at http://localhost:5173.
-
-## Free demo deployment
-
-The root `Dockerfile` builds a single service where Express also serves the frontend.
-See [DEPLOY.md](DEPLOY.md) for step-by-step setup on Render + Neon.
-
-## API Endpoints
-
-### Auth
-| Method | Path                      | Description                |
-|--------|---------------------------|----------------------------|
-| POST   | `/api/auth/register`      | Email + password register  |
-| POST   | `/api/auth/login`         | Email + password login     |
-| POST   | `/api/auth/refresh`       | Refresh access token       |
-| POST   | `/api/auth/logout`        | Clear refresh cookie       |
-| GET    | `/api/auth/me`            | Get current user           |
-| GET    | `/api/auth/google`        | Google OAuth               |
-| GET    | `/api/auth/github`        | GitHub OAuth               |
-
-### Forms
-| Method | Path             | Description      |
-|--------|------------------|------------------|
-| GET    | `/api/forms`     | List user forms  |
-| POST   | `/api/forms`     | Create form      |
-| GET    | `/api/forms/:id` | Get form         |
-| PATCH  | `/api/forms/:id` | Update form      |
-| DELETE | `/api/forms/:id` | Delete form      |
-
-### Responses
-| Method | Path                          | Description                     |
-|--------|-------------------------------|---------------------------------|
-| POST   | `/api/responses/:formId/submit` | Submit a response             |
-| GET    | `/api/responses/:formId`      | Get responses (auth required)   |
 
 ## Scripts
 
-```bash
-npm run dev          # Run frontend + backend concurrently
-npm run frontend     # Frontend only
-npm run backend      # Backend only
-npm run build        # Build both for production
-npm run db:migrate   # Run Prisma migrations
-npm run db:studio    # Open Prisma Studio
+| Command | What it does |
+|---|---|
+| `npm run dev` | Frontend and backend with hot reload |
+| `npm test` | All tests (frontend + backend) |
+| `npm run build` | Production build of both packages |
+| `npm run db:migrate` | Create and apply Prisma migrations |
+| `npm run db:studio` | Browse the database in Prisma Studio |
+| `npm run lint -w frontend` | ESLint |
+
+## Project structure
+
 ```
+FormCraft/
+├── frontend/            React app (Vite)
+│   └── src/
+│       ├── pages/       Route screens: dashboard, builder, responses, analytics…
+│       ├── components/  UI building blocks and feature sections
+│       ├── store/       Zustand stores
+│       ├── schemas/     Response validation (mirrors the backend)
+│       └── api/         API client
+├── backend/             Express API
+│   ├── prisma/          Schema and migrations
+│   └── src/
+│       ├── routes/      Route definitions
+│       ├── controllers/ Request handlers
+│       ├── middleware/  Auth, CSRF, workspace roles
+│       └── utils/       Form access, submission validation, sanitizing
+├── docs/                Architecture, API, deployment, roadmap
+├── Dockerfile           Single-service image for hosting
+└── docker-compose.yml   Local stack: Postgres + API + frontend
+```
+
+## Documentation
+
+- [Architecture](docs/ARCHITECTURE.md): form lifecycle, validation, access rules, authentication
+- [API reference](docs/API.md): every endpoint, its auth and the responses
+- [Deployment](docs/DEPLOYMENT.md): free hosting on Render + Neon
+- [Roadmap](docs/ROADMAP.md): what's done and what's next
