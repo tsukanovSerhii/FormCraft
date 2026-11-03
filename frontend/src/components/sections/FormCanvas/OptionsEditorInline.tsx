@@ -38,7 +38,7 @@ function SortableOption({ opt, index, groupId, shape, onLabelChange, onRemove, c
       {canRemove && (
         <button
           onClick={() => onRemove(opt.id)}
-          className="opacity-0 transition-opacity group-hover/opt:opacity-100 text-text-muted hover:text-error"
+          className="opacity-0 transition-opacity group-hover/opt:opacity-100 text-text-muted hover:text-danger"
         >
           <X size={13} />
         </button>

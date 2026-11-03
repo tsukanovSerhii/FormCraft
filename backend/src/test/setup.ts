@@ -32,6 +32,9 @@ vi.mock('../utils/prisma', () => {
     create: vi.fn(),
     count: vi.fn(),
   }
+  const workspaceMember = {
+    findUnique: vi.fn(),
+  }
   const userTemplate = {
     findMany: vi.fn(),
     create: vi.fn(),
@@ -40,7 +43,7 @@ vi.mock('../utils/prisma', () => {
   }
 
   return {
-    default: { user, form, response, userTemplate },
+    default: { user, form, response, userTemplate, workspaceMember },
   }
 })
 

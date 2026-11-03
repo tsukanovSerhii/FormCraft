@@ -2,7 +2,11 @@ import type { Request, Response } from 'express'
 import prisma from '../utils/prisma'
 
 export async function getPublicForm(req: Request, res: Response) {
-  const form = await prisma.form.findUnique({ where: { id: req.params.id } })
+  // Only what a respondent needs — never owner/workspace ids or limits
+  const form = await prisma.form.findUnique({
+    where: { id: req.params.id },
+    select: { id: true, title: true, description: true, status: true, fields: true, updatedAt: true },
+  })
   if (!form || form.status !== 'published') {
     res.status(404).json({ error: 'Form not found or not published' })
     return

@@ -6,7 +6,7 @@ import { useParams } from 'react-router-dom'
 import { publicApi } from '@/api/public'
 import { responsesApi } from '@/api/responses'
 import { FormRenderer, SuccessScreen } from '@/components/sections/FormRenderer'
-import { buildValidationSchema } from '@/schemas/fieldSchemas'
+import { buildValidationSchema, prepareSubmission } from '@/schemas/fieldSchemas'
 import type { ApiForm } from '@/types/api'
 import type { FormField } from '@/types/form'
 
@@ -34,6 +34,7 @@ export default function PublicFormPage() {
   const [loading, setLoading] = useState(true)
   const [notFound, setNotFound] = useState(false)
   const [submitted, setSubmitted] = useState(false)
+  const [submitError, setSubmitError] = useState('')
   const [mountedAt] = useState<number>(() => Date.now())
 
   useEffect(() => {
@@ -57,16 +58,19 @@ export default function PublicFormPage() {
 
   async function onSubmit(data: Record<string, unknown>) {
     if (!formId) return
+    setSubmitError('')
     try {
-      await responsesApi.submit(formId, data)
+      await responsesApi.submit(formId, prepareSubmission(fields, data))
+      setSubmitted(true)
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : ''
       if (msg.includes('expired') || msg.includes('maximum')) {
         setNotFound(true)
         return
       }
+      // Keep the answers on screen so the respondent can retry
+      setSubmitError(msg || 'Could not submit the form. Please try again.')
     }
-    setSubmitted(true)
   }
 
   if (loading) {
@@ -149,10 +153,17 @@ export default function PublicFormPage() {
                   <p className="text-[14px]">This form has no fields yet.</p>
                 </div>
               ) : (
-                <FormRenderer
-                  form={{ ...apiForm, fields, description: apiForm.description ?? undefined, status: apiForm.status as 'draft' | 'published', responses: 0, createdAt: mountedAt, updatedAt: mountedAt }}
-                  onSubmit={onSubmit}
-                />
+                <>
+                  {submitError && (
+                    <div role="alert" className="mx-8 mt-6 rounded-lg border border-danger/30 bg-danger-light px-4 py-3 text-[13px] text-danger">
+                      {submitError}
+                    </div>
+                  )}
+                  <FormRenderer
+                    form={{ ...apiForm, fields, description: apiForm.description ?? undefined, status: apiForm.status as 'draft' | 'published', responses: 0, createdAt: mountedAt, updatedAt: mountedAt }}
+                    onSubmit={onSubmit}
+                  />
+                </>
               )}
             </div>
 

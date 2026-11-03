@@ -36,7 +36,7 @@ function SortableOptionRow({ option, index, groupId, canRemove, onLabelChange, o
 			{canRemove && (
 				<button
 					onClick={() => onRemove(option.id)}
-					className="shrink-0 text-text-muted transition-colors hover:text-error"
+					className="shrink-0 text-text-muted transition-colors hover:text-danger"
 				>
 					<X size={13} />
 				</button>

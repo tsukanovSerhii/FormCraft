@@ -44,7 +44,7 @@ export default function DropdownMenu({ onEdit, onDuplicate, onDelete }: Dropdown
 					<div className="my-1 border-t border-border" />
 					<button
 						onClick={() => { setOpen(false); onDelete() }}
-						className="flex w-full items-center gap-2 px-3 py-2 text-[13px] text-error hover:bg-surface-secondary"
+						className="flex w-full items-center gap-2 px-3 py-2 text-[13px] text-danger hover:bg-surface-secondary"
 					>
 						<Trash2 size={13} /> Delete
 					</button>

@@ -4,22 +4,8 @@ import type { AuthRequest } from '../middleware/auth'
 import prisma from '../utils/prisma'
 import { sanitizeResponseData } from '../utils/sanitize'
 import { sendNewResponseEmail } from '../services/email'
-
-const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-
-function validateFieldTypes(fields: unknown[], data: Record<string, unknown>): string | null {
-  for (const field of fields as Array<{ id: string; type: string; required?: boolean }>) {
-    const value = data[field.id]
-    if (value === undefined || value === null || value === '') continue
-    if (field.type === 'email' && typeof value === 'string' && !EMAIL_RE.test(value)) {
-      return `Field "${field.id}" must be a valid email address`
-    }
-    if (field.type === 'number' && isNaN(Number(value))) {
-      return `Field "${field.id}" must be a number`
-    }
-  }
-  return null
-}
+import { findAccessibleForm } from '../utils/formAccess'
+import { validateSubmission } from '../utils/submission'
 
 export async function submitResponse(req: Request, res: Response) {
   const { formId } = req.params
@@ -46,15 +32,15 @@ export async function submitResponse(req: Request, res: Response) {
 
   const sanitized = sanitizeResponseData(req.body)
 
-  const fields = Array.isArray(form.fields) ? form.fields : []
-  const validationError = validateFieldTypes(fields, sanitized)
-  if (validationError) {
-    res.status(400).json({ error: validationError })
+  const fields = Array.isArray(form.fields) ? (form.fields as any[]) : []
+  const result = validateSubmission(fields, sanitized)
+  if ('error' in result) {
+    res.status(400).json({ error: result.error })
     return
   }
 
   const response = await prisma.response.create({
-    data: { formId, userId: userId ?? null, data: sanitized as Prisma.InputJsonObject },
+    data: { formId, userId: userId ?? null, data: result.data as Prisma.InputJsonObject },
   })
 
   // Fire-and-forget email to form owner
@@ -77,7 +63,7 @@ export async function submitResponse(req: Request, res: Response) {
 export async function getResponses(req: Request, res: Response) {
   const userId = (req as AuthRequest).userId
 
-  const form = await prisma.form.findFirst({ where: { id: req.params.formId, userId } })
+  const form = await findAccessibleForm(req.params.formId, userId)
   if (!form) {
     res.status(404).json({ error: 'Form not found' })
     return
@@ -103,7 +89,7 @@ export async function getResponses(req: Request, res: Response) {
 export async function exportCSV(req: Request, res: Response) {
   const userId = (req as AuthRequest).userId
 
-  const form = await prisma.form.findFirst({ where: { id: req.params.formId, userId } })
+  const form = await findAccessibleForm(req.params.formId, userId)
   if (!form) {
     res.status(404).json({ error: 'Form not found' })
     return
