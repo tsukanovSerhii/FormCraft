@@ -2,7 +2,7 @@ import { formatRelativeDate } from '@/lib/utils'
 import type { FormResponse } from '@/store/responsesStore'
 
 const AVATAR_COLORS = [
-  'bg-brand-muted text-brand',
+  'bg-brand-muted text-brand-text',
   'bg-success-light text-success',
   'bg-danger-light text-danger',
 ]

@@ -22,7 +22,7 @@ export default function RatingConfig({ fieldId, ratingMax }: RatingConfigProps) 
 						className={[
 							'flex h-8 flex-1 items-center justify-center rounded-md border text-[13px] font-medium transition-colors',
 							n === ratingMax
-								? 'border-brand bg-brand-muted text-brand'
+								? 'border-brand bg-brand-muted text-brand-text'
 								: 'border-border text-text-secondary hover:border-brand-light',
 						].join(' ')}
 					>

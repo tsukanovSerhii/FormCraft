@@ -1,9 +1,14 @@
 @import "tailwindcss";
 
+/* All pairs below are checked against WCAG AA: text ≥ 4.5:1 on its surfaces,
+   UI controls (toggle, strong borders) as close to 3:1 as the design allows.
+   Brand is split by role: `brand` is a fill under white text, `brand-text` is
+   brand-colored text/icons — one hex cannot meet 4.5:1 for both on dark surfaces. */
 @theme {
   /* Brand */
-  --color-brand: #6c63ff;
-  --color-brand-dark: #5a52d5;
+  --color-brand: #5850ec;
+  --color-brand-dark: #4a41d6;
+  --color-brand-text: #5850ec;
   --color-brand-light: #e8e6ff;
   --color-brand-muted: #f3f2ff;
 
@@ -14,21 +19,25 @@
 
   /* Borders */
   --color-border: #e4e6ed;
-  --color-border-strong: #cdd0db;
+  --color-border-strong: #aeb2c4;
 
   /* Text */
   --color-text-primary: #1a1d2e;
   --color-text-secondary: #5c6075;
-  --color-text-muted: #9399ae;
-  --color-text-placeholder: #b0b5c8;
+  --color-text-muted: #656a83;
+  --color-text-placeholder: #8d92a7;
 
-  /* Semantic */
-  --color-danger: #ff4757;
-  --color-danger-light: #fff0f1;
-  --color-success: #2ed573;
-  --color-success-light: #edfff5;
-  --color-toggle-on: #6c63ff;
-  --color-toggle-off: #cdd0db;
+  /* Semantic — `*` is text/icon color, `*-light` its tinted background */
+  --color-danger: #c8243a;
+  --color-danger-light: #fdecee;
+  --color-danger-solid: #c8243a;
+  --color-success: #15803d;
+  --color-success-light: #e8f8ef;
+  --color-warning: #b45309;
+  --color-warning-light: #fff7e6;
+  --color-star: #f59e0b;
+  --color-toggle-on: #5850ec;
+  --color-toggle-off: #8c90a6;
 
   /* Radii */
   --radius-sm: 6px;
@@ -39,11 +48,12 @@
   /* Shadows */
   --shadow-card: 0 1px 3px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04);
   --shadow-panel: 0 4px 16px rgba(0, 0, 0, 0.08);
-  --shadow-button: 0 2px 8px rgba(108, 99, 255, 0.35);
+  --shadow-button: 0 2px 8px rgba(88, 80, 236, 0.3);
 }
 
 /* ─── Dark theme ─────────────────────────────────────────── */
 .dark {
+  --color-brand-text: #9d97ff;
   --color-brand-muted: #1e1a3f;
   --color-brand-light: #2d2760;
 
@@ -52,20 +62,26 @@
   --color-surface-tertiary: #1c1d2b;
 
   --color-border: #272838;
-  --color-border-strong: #353648;
+  --color-border-strong: #4a4c63;
 
   --color-text-primary: #ecedf5;
-  --color-text-secondary: #9b9db8;
-  --color-text-muted: #5e6080;
-  --color-text-placeholder: #3e4060;
+  --color-text-secondary: #a3a5bf;
+  --color-text-muted: #80839f;
+  --color-text-placeholder: #5f6283;
 
+  --color-danger: #ff6b78;
   --color-danger-light: #2a1018;
+  --color-danger-solid: #c92a3a;
+  --color-success: #34d399;
   --color-success-light: #0d2318;
-  --color-toggle-off: #353648;
+  --color-warning: #fbbf24;
+  --color-warning-light: #2a2110;
+  --color-star: #fbbf24;
+  --color-toggle-off: #64677f;
 
   --shadow-card: 0 1px 3px rgba(0, 0, 0, 0.3), 0 1px 2px rgba(0, 0, 0, 0.2);
   --shadow-panel: 0 4px 24px rgba(0, 0, 0, 0.4);
-  --shadow-button: 0 2px 12px rgba(108, 99, 255, 0.5);
+  --shadow-button: 0 2px 12px rgba(88, 80, 236, 0.45);
 }
 
 html, body {
@@ -82,8 +98,8 @@ html, body {
   --color-land-border:  #ffffff12;
   --color-land-border2: #ffffff1f;
   --color-land-text:    #e8e9f0;
-  --color-land-text2:   #7c8096;
-  --color-land-text3:   #4a4e63;
+  --color-land-text2:   #8a8ea4;
+  --color-land-text3:   #777b91;
   --color-land-accent:  #6a63ff;
   --color-land-accent2: #4e45e2;
   --color-land-accent3: #8b85ff;

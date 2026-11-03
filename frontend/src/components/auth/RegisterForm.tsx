@@ -79,7 +79,7 @@ export function RegisterForm({ onSwitch }: { onSwitch: () => void }) {
         type="submit"
         disabled={isSubmitting}
         className="flex h-11 w-full items-center justify-center gap-2 rounded-lg text-[15px] font-bold text-[#fbf7ff] transition-all hover:-translate-y-px disabled:opacity-50 disabled:cursor-not-allowed mt-1"
-        style={{ background: 'linear-gradient(135deg,#4e45e2 0%,#6a63ff 100%)', boxShadow: '0 4px 20px rgba(106,99,255,0.25)' }}
+        style={{ background: 'linear-gradient(135deg,#4e45e2 0%,#5850ec 100%)', boxShadow: '0 4px 20px rgba(106,99,255,0.25)' }}
       >
         {isSubmitting ? <Loader2 size={16} className="animate-spin" /> : 'Create Account'}
       </button>

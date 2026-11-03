@@ -33,7 +33,7 @@ export function VersionHistoryModal({ versions, loading, onClose, onRestore }: P
               </div>
               <button
                 onClick={() => onRestore(v.id)}
-                className="rounded-md border border-border px-3 py-1 text-[12px] font-medium text-text-secondary transition-colors hover:border-brand hover:text-brand"
+                className="rounded-md border border-border px-3 py-1 text-[12px] font-medium text-text-secondary transition-colors hover:border-brand hover:text-brand-text"
               >
                 Restore
               </button>

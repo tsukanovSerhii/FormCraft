@@ -150,7 +150,7 @@ export default function FieldInput({ field, error }: FieldInputProps) {
                     size={24}
                     className={[
                       'cursor-pointer transition-colors',
-                      i < current ? 'fill-[#ffa502] text-[#ffa502]' : error ? 'text-error' : 'text-border hover:text-[#ffa502]',
+                      i < current ? 'fill-star text-star' : error ? 'text-danger' : 'text-border hover:text-star',
                     ].join(' ')}
                     onClick={() => { setRating(i + 1); f.onChange(i + 1) }}
                   />

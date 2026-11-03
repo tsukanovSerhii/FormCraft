@@ -52,7 +52,7 @@ function FieldCard({
 			onClick={onClick}
 			className="flex flex-col items-center gap-3 rounded-xl border border-border bg-surface-secondary p-4 text-center transition-all hover:border-brand-light hover:bg-brand-muted"
 		>
-			<div className="flex h-10 w-10 items-center justify-center rounded-lg bg-surface text-brand">
+			<div className="flex h-10 w-10 items-center justify-center rounded-lg bg-surface text-brand-text">
 				<Icon size={18} />
 			</div>
 			<p className="text-[13px] font-medium text-text-primary">{label}</p>
@@ -100,7 +100,7 @@ export default function AddFieldModal({ open, onClose, onSelect }: AddFieldModal
 					</p>
 					<button
 						onClick={() => setShowMore(v => !v)}
-						className="flex items-center gap-1 text-[12px] font-semibold text-brand hover:underline"
+						className="flex items-center gap-1 text-[12px] font-semibold text-brand-text hover:underline"
 					>
 						{showMore ? 'Hide field types' : 'More field types'}
 						<ChevronRight

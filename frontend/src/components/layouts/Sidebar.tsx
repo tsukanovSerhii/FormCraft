@@ -76,7 +76,7 @@ export default function Sidebar() {
 							[
 								'flex items-center gap-2.5 rounded-md px-3 py-2 text-[13px] font-medium transition-colors',
 								isActive
-									? 'bg-brand-muted text-brand'
+									? 'bg-brand-muted text-brand-text'
 									: 'text-text-secondary hover:bg-surface-secondary hover:text-text-primary',
 							].join(' ')
 						}
@@ -97,7 +97,7 @@ export default function Sidebar() {
 							[
 								'flex items-center gap-2.5 rounded-md px-3 py-2 text-[13px] font-medium transition-colors',
 								isActive
-									? 'bg-brand-muted text-brand'
+									? 'bg-brand-muted text-brand-text'
 									: 'text-text-secondary hover:bg-surface-secondary hover:text-text-primary',
 							].join(' ')
 						}

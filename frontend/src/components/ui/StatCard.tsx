@@ -13,14 +13,14 @@ export default function StatCard({ label, value, delta, deltaType, icon: Icon, u
 	return (
 		<div className="flex flex-col gap-3 rounded-lg border border-border bg-surface p-5 shadow-card">
 			<div className="flex items-start justify-between">
-				<div className="flex h-9 w-9 items-center justify-center rounded-md bg-brand-muted text-brand">
+				<div className="flex h-9 w-9 items-center justify-center rounded-md bg-brand-muted text-brand-text">
 					<Icon size={16} />
 				</div>
 				<span className={[
 					'rounded-full px-2 py-0.5 text-[11px] font-semibold',
 					deltaType === 'up' ? 'bg-success-light text-success'
 					: deltaType === 'down' ? 'bg-danger-light text-danger'
-					: 'bg-brand-muted text-brand',
+					: 'bg-brand-muted text-brand-text',
 				].join(' ')}>
 					{delta}
 				</span>

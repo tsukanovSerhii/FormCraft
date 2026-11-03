@@ -168,12 +168,12 @@ export default function SettingsPanel() {
 
 			{/* Preview hint */}
 			<div className="mx-4 mb-4 flex items-center gap-2 rounded-md bg-text-primary px-3 py-2.5">
-				<Eye size={14} className="shrink-0 text-white opacity-70" />
+				<Eye size={14} className="shrink-0 text-surface opacity-70" />
 				<div className="min-w-0">
-					<p className="text-[11px] font-semibold uppercase tracking-wider text-white opacity-60">
+					<p className="text-[11px] font-semibold uppercase tracking-wider text-surface opacity-60">
 						Preview Mode
 					</p>
-					<p className="text-[12px] font-medium text-white">Everything looks good!</p>
+					<p className="text-[12px] font-medium text-surface">Everything looks good!</p>
 				</div>
 			</div>
 		</div>

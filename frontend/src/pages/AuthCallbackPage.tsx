@@ -26,7 +26,7 @@ export default function AuthCallbackPage() {
 
   return (
     <div className="flex min-h-screen items-center justify-center">
-      <Loader2 size={28} className="animate-spin text-brand" />
+      <Loader2 size={28} className="animate-spin text-brand-text" />
     </div>
   )
 }

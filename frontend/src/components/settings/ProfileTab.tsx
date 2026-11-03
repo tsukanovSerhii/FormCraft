@@ -70,8 +70,8 @@ export function ProfileTab() {
           <p className="text-xs text-text-muted">Email cannot be changed.</p>
         </div>
 
-        {msg && <p className="text-sm text-green-600">{msg}</p>}
-        {error && <p className="text-sm text-red-500">{error}</p>}
+        {msg && <p className="text-sm text-success">{msg}</p>}
+        {error && <p className="text-sm text-danger">{error}</p>}
 
         <div>
           <button

@@ -16,9 +16,9 @@ export default function FormCard({ id, title, responses, updatedAt, status }: Fo
 			<div className="flex items-start justify-between">
 				<div className="flex h-9 w-9 items-center justify-center rounded-lg bg-brand-muted">
 					<svg width="15" height="15" viewBox="0 0 16 16" fill="none">
-						<rect x="2" y="2" width="12" height="2" rx="1" fill="#6c63ff" />
-						<rect x="2" y="6" width="8" height="2" rx="1" fill="#6c63ff" fillOpacity="0.5" />
-						<rect x="2" y="10" width="10" height="2" rx="1" fill="#6c63ff" fillOpacity="0.5" />
+						<rect x="2" y="2" width="12" height="2" rx="1" fill="currentColor" className="text-brand-text" />
+						<rect x="2" y="6" width="8" height="2" rx="1" fill="currentColor" className="text-brand-text" fillOpacity="0.5" />
+						<rect x="2" y="10" width="10" height="2" rx="1" fill="currentColor" className="text-brand-text" fillOpacity="0.5" />
 					</svg>
 				</div>
 				<div onClick={e => e.stopPropagation()}>

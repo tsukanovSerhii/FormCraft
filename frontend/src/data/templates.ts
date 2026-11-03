@@ -21,7 +21,7 @@ export const TEMPLATES: Template[] = [
     description: 'Collect structured feedback from your customers.',
     category: 'Feedback',
     icon: MessageSquare,
-    color: 'bg-brand-muted text-brand',
+    color: 'bg-brand-muted text-brand-text',
     fields: [
       { id: uid(), type: 'text', label: 'Full Name', placeholder: 'Your name', required: true },
       { id: uid(), type: 'email', label: 'Email Address', placeholder: 'name@example.com', required: true },
@@ -105,7 +105,7 @@ export const TEMPLATES: Template[] = [
     description: 'Understand how users interact with your product.',
     category: 'Survey',
     icon: BarChart2,
-    color: 'bg-brand-muted text-brand',
+    color: 'bg-brand-muted text-brand-text',
     fields: [
       { id: uid(), type: 'radio', label: 'How often do you use our product?', required: true, options: [
         { id: uid(), label: 'Daily' },

@@ -36,7 +36,7 @@ export function DangerZone({ workspaceId }: Props) {
           <button
             disabled={deleteBusy}
             onClick={handleDelete}
-            className="flex items-center gap-1.5 rounded-md bg-danger px-4 py-2 text-[13px] font-semibold text-white hover:opacity-90 disabled:opacity-50"
+            className="flex items-center gap-1.5 rounded-md bg-danger-solid px-4 py-2 text-[13px] font-semibold text-white hover:opacity-90 disabled:opacity-50"
           >
             {deleteBusy ? <Loader2 size={13} className="animate-spin" /> : <Trash2 size={13} />}
             Yes, delete workspace

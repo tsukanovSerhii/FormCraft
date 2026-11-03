@@ -70,8 +70,8 @@ export function SecurityTab() {
               </div>
             )
           })}
-          {msg && <p className="text-sm text-green-600">{msg}</p>}
-          {error && <p className="text-sm text-red-500">{error}</p>}
+          {msg && <p className="text-sm text-success">{msg}</p>}
+          {error && <p className="text-sm text-danger">{error}</p>}
           <div>
             <button
               type="submit"
@@ -84,15 +84,15 @@ export function SecurityTab() {
         </form>
       </div>
 
-      <div className="rounded-xl border border-red-200 bg-red-50/50 p-5">
-        <h3 className="mb-1 text-sm font-semibold text-red-700">Delete account</h3>
-        <p className="mb-4 text-sm text-red-600">
+      <div className="rounded-xl border border-danger/30 bg-danger-light p-5">
+        <h3 className="mb-1 text-sm font-semibold text-danger">Delete account</h3>
+        <p className="mb-4 text-sm text-text-secondary">
           This permanently deletes your account, all forms, and responses. This action cannot be undone.
         </p>
         {!deleteConfirm ? (
           <button
             onClick={() => setDeleteConfirm(true)}
-            className="h-9 rounded-lg border border-red-300 bg-white px-4 text-sm font-semibold text-red-600 transition hover:bg-red-50"
+            className="h-9 rounded-lg border border-danger/40 bg-surface px-4 text-sm font-semibold text-danger transition hover:bg-danger-light"
           >
             Delete my account
           </button>
@@ -101,7 +101,7 @@ export function SecurityTab() {
             <button
               onClick={handleDelete}
               disabled={deleting}
-              className="h-9 rounded-lg bg-red-600 px-4 text-sm font-semibold text-white transition hover:bg-red-700 disabled:opacity-40"
+              className="h-9 rounded-lg bg-danger-solid px-4 text-sm font-semibold text-white transition hover:opacity-90 disabled:opacity-40"
             >
               {deleting ? 'Deleting…' : 'Yes, delete permanently'}
             </button>

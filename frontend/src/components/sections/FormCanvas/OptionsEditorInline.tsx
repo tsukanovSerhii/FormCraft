@@ -98,7 +98,7 @@ export function OptionsEditorInline({ fieldId, options, shape, onUpdate }: Props
         ))}
         <button
           onClick={addOption}
-          className="flex items-center gap-1.5 pt-1 text-[12px] font-medium text-brand hover:underline"
+          className="flex items-center gap-1.5 pt-1 text-[12px] font-medium text-brand-text hover:underline"
         >
           <Plus size={13} /> Add option
         </button>

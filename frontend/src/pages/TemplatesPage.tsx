@@ -34,7 +34,7 @@ export default function TemplatesPage() {
 			description: t.description ?? '',
 			category: t.category,
 			icon: FileText,
-			color: 'bg-brand-muted text-brand',
+			color: 'bg-brand-muted text-brand-text',
 			fields: t.fields as FormField[]
 		})
 	}
@@ -111,7 +111,7 @@ export default function TemplatesPage() {
 									key={t.id}
 									className="group flex flex-col rounded-lg border border-border bg-surface p-5 shadow-card transition-shadow hover:shadow-panel"
 								>
-									<div className="mb-4 flex h-10 w-10 items-center justify-center rounded-md bg-brand-muted text-brand">
+									<div className="mb-4 flex h-10 w-10 items-center justify-center rounded-md bg-brand-muted text-brand-text">
 										<FileText size={18} />
 									</div>
 									<p className="text-[14px] font-semibold text-text-primary">
@@ -128,13 +128,13 @@ export default function TemplatesPage() {
 									<div className="mt-4 flex gap-2 opacity-0 transition-opacity group-hover:opacity-100">
 										<button
 											onClick={() => applyUserTemplate(t)}
-											className="h-8 flex-1 rounded-md border border-brand text-[13px] font-medium text-brand transition-colors hover:bg-brand hover:text-white"
+											className="h-8 flex-1 rounded-md border border-brand text-[13px] font-medium text-brand-text transition-colors hover:bg-brand hover:text-white"
 										>
 											Use Template
 										</button>
 										<button
 											onClick={() => handleDelete(t.id)}
-											className="flex h-8 w-8 items-center justify-center rounded-md border border-border text-text-muted transition-colors hover:border-red-300 hover:text-red-500"
+											className="flex h-8 w-8 items-center justify-center rounded-md border border-border text-text-muted transition-colors hover:border-danger/40 hover:text-danger"
 										>
 											<Trash2 size={13} />
 										</button>
@@ -178,7 +178,7 @@ export default function TemplatesPage() {
 									</p>
 									<button
 										onClick={() => applyTemplate(t)}
-										className="mt-4 h-8 w-full rounded-md border border-border text-[13px] font-medium text-text-secondary opacity-0 transition-all group-hover:border-brand group-hover:text-brand group-hover:opacity-100"
+										className="mt-4 h-8 w-full rounded-md border border-border text-[13px] font-medium text-text-secondary opacity-0 transition-all group-hover:border-brand group-hover:text-brand-text group-hover:opacity-100"
 									>
 										Use Template
 									</button>
