@@ -22,6 +22,8 @@ export default function ResponsesPage() {
 	const [search, setSearch] = useState('')
 	const [formFilter, setFormFilter] = useState('all')
 	const [dateFilter, setDateFilter] = useState('all')
+	// Captured when the filter changes — Date.now() must not run during render
+	const [dateCutoff, setDateCutoff] = useState(0)
 	const [page, setPage] = useState(1)
 	const [selected, setSelected] = useState<FormResponse | null>(null)
 	const [exporting, setExporting] = useState(false)
@@ -32,15 +34,9 @@ export default function ResponsesPage() {
 	useEffect(() => { forms.forEach(f => fetchResponses(f.id, f.title)) }, [forms.length])
 
 	const filtered = useMemo(() => {
-		const cutoff = dateFilter === '7d'
-			? Date.now() - 7 * 86400_000
-			: dateFilter === '30d'
-				? Date.now() - 30 * 86400_000
-				: 0
-
 		return responses.filter(r => {
 			if (formFilter !== 'all' && r.formId !== formFilter) return false
-			if (cutoff && r.submittedAt < cutoff) return false
+			if (dateCutoff && r.submittedAt < dateCutoff) return false
 			if (search) {
 				const q = search.toLowerCase()
 				const inTitle = r.formTitle.toLowerCase().includes(q)
@@ -49,7 +45,7 @@ export default function ResponsesPage() {
 			}
 			return true
 		})
-	}, [responses, formFilter, dateFilter, search])
+	}, [responses, formFilter, dateCutoff, search])
 
 	const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE))
 	const paginated = filtered.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE)
@@ -62,7 +58,12 @@ export default function ResponsesPage() {
 
 	function handleSearch(v: string) { setSearch(v); setPage(1) }
 	function handleFormFilter(v: string) { setFormFilter(v); setPage(1) }
-	function handleDateFilter(v: string) { setDateFilter(v); setPage(1) }
+	function handleDateFilter(v: string) {
+		const days = v === '7d' ? 7 : v === '30d' ? 30 : 0
+		setDateFilter(v)
+		setDateCutoff(days ? Date.now() - days * 86400_000 : 0)
+		setPage(1)
+	}
 
 	async function handleExport() {
 		if (!accessToken) return

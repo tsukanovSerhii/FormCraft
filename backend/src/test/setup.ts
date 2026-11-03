@@ -45,7 +45,7 @@ vi.mock('../utils/prisma', () => {
 })
 
 // Mock passport strategies — no real OAuth in tests
-vi.mock('../services/passport', () => ({}))
+vi.mock('../services/passport', () => ({ oauthEnabled: { google: false, github: false } }))
 
 // Mock bcryptjs so hashing doesn't block tests (real bcrypt is too slow in unit tests)
 vi.mock('bcryptjs', () => ({

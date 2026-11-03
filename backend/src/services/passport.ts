@@ -5,7 +5,14 @@ import prisma from '../utils/prisma'
 
 const BACKEND_URL = process.env.BACKEND_URL ?? 'http://localhost:3000'
 
-passport.use(new GoogleStrategy({
+// OAuth is optional: strategies are registered only when credentials are set,
+// so the server can boot (e.g. on a demo host) with email/password auth only.
+export const oauthEnabled = {
+  google: Boolean(process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET),
+  github: Boolean(process.env.GITHUB_CLIENT_ID && process.env.GITHUB_CLIENT_SECRET),
+}
+
+if (oauthEnabled.google) passport.use(new GoogleStrategy({
   clientID: process.env.GOOGLE_CLIENT_ID!,
   clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
   callbackURL: `${BACKEND_URL}/api/auth/google/callback`,
@@ -30,7 +37,7 @@ passport.use(new GoogleStrategy({
   }
 }))
 
-passport.use(new GitHubStrategy({
+if (oauthEnabled.github) passport.use(new GitHubStrategy({
   clientID: process.env.GITHUB_CLIENT_ID!,
   clientSecret: process.env.GITHUB_CLIENT_SECRET!,
   callbackURL: `${BACKEND_URL}/api/auth/github/callback`,

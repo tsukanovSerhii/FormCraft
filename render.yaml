@@ -1,0 +1,39 @@
+# Render Blueprint — free demo deployment (see DEPLOY.md)
+# Database: external free PostgreSQL (Neon) — Render's free Postgres expires after 30 days.
+services:
+  - type: web
+    name: formcraft
+    runtime: docker
+    plan: free
+    dockerfilePath: ./Dockerfile
+    healthCheckPath: /api/health
+    envVars:
+      # Neon connection strings — copy both from `neon env pull` (.env):
+      # DATABASE_URL          pooled (host contains -pooler) — app queries
+      # DATABASE_URL_UNPOOLED direct — `prisma migrate deploy` on start
+      - key: DATABASE_URL
+        sync: false
+      - key: DATABASE_URL_UNPOOLED
+        sync: false
+      # Public URL of this service, e.g. https://formcraft.onrender.com (no trailing slash)
+      - key: FRONTEND_URL
+        sync: false
+      - key: BACKEND_URL
+        sync: false
+      - key: SITE_URL
+        sync: false
+      - key: JWT_SECRET
+        generateValue: true
+      - key: JWT_REFRESH_SECRET
+        generateValue: true
+      # Optional — leave empty to disable
+      - key: GOOGLE_CLIENT_ID
+        sync: false
+      - key: GOOGLE_CLIENT_SECRET
+        sync: false
+      - key: GITHUB_CLIENT_ID
+        sync: false
+      - key: GITHUB_CLIENT_SECRET
+        sync: false
+      - key: RESEND_API_KEY
+        sync: false
