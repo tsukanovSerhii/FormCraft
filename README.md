@@ -6,11 +6,11 @@ A full-stack form builder with drag & drop, real-time validation, and response t
 
 | Layer    | Technology                                        |
 |----------|---------------------------------------------------|
-| Frontend | React 18, Vite, TypeScript, Tailwind CSS, Zustand |
+| Frontend | React 19, Vite, TypeScript, Tailwind CSS, Zustand |
 | Backend  | Node.js, Express, Prisma ORM                      |
 | Database | PostgreSQL                                        |
 | Auth     | JWT (access + refresh), Google OAuth, GitHub OAuth |
-| Deploy   | Docker + Docker Compose                           |
+| Deploy   | Docker, Render + Neon (free demo)                 |
 
 ## Project Structure
 
@@ -28,7 +28,7 @@ FormCraft/
 
 - Node.js 20+
 - PostgreSQL 15+ (or use Docker)
-- Google & GitHub OAuth credentials
+- Google & GitHub OAuth credentials (optional — email/password works without them)
 
 ### 1. Clone and install
 
@@ -37,6 +37,9 @@ git clone https://github.com/your-username/formcraft.git
 cd formcraft
 npm install
 ```
+
+Run `npm install` only from the repo root. npm workspaces use one root `package-lock.json`, so
+don't create lockfiles inside `frontend/` or `backend/`.
 
 ### 2. Configure environment
 
@@ -70,6 +73,11 @@ docker compose up --build
 ```
 
 The app will be available at http://localhost:5173.
+
+## Free demo deployment
+
+The root `Dockerfile` builds a single service where Express also serves the frontend.
+See [DEPLOY.md](DEPLOY.md) for step-by-step setup on Render + Neon.
 
 ## API Endpoints
 

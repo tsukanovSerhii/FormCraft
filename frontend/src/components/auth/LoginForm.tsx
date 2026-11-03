@@ -2,7 +2,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { Loader2 } from 'lucide-react'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 import { z } from 'zod'
 import { useAuthStore } from '@/store/authStore'
 import { InputField, TextInput, PasswordInput } from './AuthInputs'
@@ -21,7 +21,12 @@ const API = import.meta.env.VITE_API_URL ?? 'http://localhost:3000'
 export function LoginForm({ onSwitch }: { onSwitch: () => void }) {
   const navigate = useNavigate()
   const { setAuth } = useAuthStore()
-  const [serverError, setServerError] = useState('')
+  const [searchParams] = useSearchParams()
+  const [serverError, setServerError] = useState(() =>
+    searchParams.get('error') === 'oauth_unavailable'
+      ? 'Social sign-in is not configured on this server. Please use email and password.'
+      : ''
+  )
 
   const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm<LoginData>({
     resolver: zodResolver(loginSchema),
